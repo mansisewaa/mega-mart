@@ -18,8 +18,6 @@
             text-align: center;
         }
     }
-
-    
 </style>
 @section('content')
 <section class="hero-section hero-section-full-height">
@@ -125,56 +123,23 @@
             </div>
         </div>
 
-        <div class="row g-3 category-row ">
-
-            <!-- Category 1 -->
-            <div class="col-auto">
-                <div class="category-card">
-                    <img src="img/product1.png" alt="Hospital Beds">
-                    <h3 class="category-title">Hospital Beds</h3>
+        <div class="category-wrapper">
+            <div class="category-row d-flex">
+                @foreach($categories as $category)
+                <div class="col-auto">
+                    <a href="{{ route('products.byCategory', $category->id) }}">
+                        <div class="category-card">
+                            @if($category->file)
+                            <img src="{{ asset('uploads/categoryfiles/' . $category->file) }}" alt="{{ $category->name }}">
+                            @else
+                            <img src="{{ asset('img/no_img.jpg') }}" alt="{{ $category->name }}">
+                            @endif
+                            <h3 class="category-title">{{ $category->name }}</h3>
+                        </div>
+                    </a>
                 </div>
+                @endforeach
             </div>
-
-            <!-- Category 2 -->
-            <div class="col-auto">
-                <div class="category-card">
-                    <img src="img/product1.png" alt="Infant & Childcare Equipment">
-                    <h3 class="category-title">Infant & Childcare Equipment</h3>
-                </div>
-            </div>
-
-            <!-- Category 3 -->
-            <div class="col-auto">
-                <div class="category-card">
-                    <img src="img/product1.png" alt="Obstetric & Gynecology">
-                    <h3 class="category-title">Obstetric & Gynecology</h3>
-                </div>
-            </div>
-
-            <!-- Category 4 -->
-            <div class="col-auto">
-                <div class="category-card">
-                    <img src="img/product1.png" alt="Emergency & Recovery">
-                    <h3 class="category-title">Emergency & Recovery</h3>
-                </div>
-            </div>
-
-            <!-- Category 5 -->
-            <div class="col-auto">
-                <div class="category-card">
-                    <img src="img/product1.png" alt="Examination Tables">
-                    <h3 class="category-title">Examination Tables</h3>
-                </div>
-            </div>
-
-            <!-- Category 6 -->
-            <div class="col-auto">
-                <div class="category-card">
-                    <img src="img/product1.png" alt="OT Furniture / Trolleys">
-                    <h3 class="category-title">OT Furniture / Trolleys</h3>
-                </div>
-            </div>
-
         </div>
     </div>
 </section>
@@ -186,97 +151,37 @@
             <div class="custom-filter-buttons">
                 <button class="custom-filter-btn active">FEATURED</button>
                 <button class="custom-filter-btn">NEW</button>
-                <button class="custom-filter-btn">BEST SELLING</button>
+                <!-- <button class="custom-filter-btn">BEST SELLING</button> -->
             </div>
         </div>
 
         <div class="row g-4 py-5 customer-product-grid">
             <!-- Product Card -->
-            <div class="col-lg-3 col-md-4 col-sm-6">
-                <div class="custom-product-card">
-                    <span class="custom-sale-badge">Sale!</span>
+
+            <div class="customer-product-grid">
+                @foreach($products as $product)
+                <div class="custom-product-card" data-id="{{ $product->id }}">
                     <div class="custom-product-actions">
-                        <button class="custom-icon-btn">♡</button>
-                        <button class="custom-icon-btn">👁</button>
+                        <button class="custom-icon-btn wishlist-btn {{ in_array($product->id, $wishlistIds) ? 'active' : '' }}"
+                            data-id="{{ $product->id }}">
+                            <i class="fa fa-heart"></i>
+                        </button>
+                        <a href="{{route('product.view',$product->id)}}" class="custom-icon-btn" style="text-decoration:none;">
+                            <i class="fa fa-eye" aria-hidden="true"></i>
+                        </a>
                     </div>
-                    <img src="img/product1.png" alt="Product" class="custom-product-img">
-                    <button class="custom-cart-btn">Add To Cart</button>
-                    <p class="custom-product-category">Category</p>
-                    <h3 class="custom-product-name">Product 1</h3>
+                    <img src="{{ asset('uploads/products/' . $product->product_image)}}" alt="Product" class="custom-product-img">
+                    <p class="custom-product-category">{{$product->category->name}}</p>
+                    <h3 class="custom-product-name">{{$product->product_name}}</h3>
                     <div class="custom-product-price">
-                        <span class="custom-new-price">$20.00</span>
-                        <span class="custom-old-price">$30.00</span>
+                        <span class="custom-new-price">{{formatRupees($product->product_discount_price)}}</span>
+                        <span class="custom-old-price">{{formatRupees($product->product_original_price)}}</span>
                     </div>
                 </div>
+                @endforeach
             </div>
-            <div class="col-lg-3 col-md-4 col-sm-6">
-                <div class="custom-product-card">
-                    <span class="custom-sale-badge">Sale!</span>
-                    <div class="custom-product-actions">
-                        <button class="custom-icon-btn">♡</button>
-                        <button class="custom-icon-btn">👁</button>
-                    </div>
-                    <img src="img/product1.png" alt="Product" class="custom-product-img">
-                    <button class="custom-cart-btn">Add To Cart</button>
-                    <p class="custom-product-category">Category</p>
-                    <h3 class="custom-product-name">Product 1</h3>
-                    <div class="custom-product-price">
-                        <span class="custom-new-price">$20.00</span>
-                        <span class="custom-old-price">$30.00</span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-4 col-sm-6">
-                <div class="custom-product-card">
-                    <!-- <span class="custom-sale-badge">Sale!</span> -->
-                    <div class="custom-product-actions">
-                        <button class="custom-icon-btn">♡</button>
-                        <button class="custom-icon-btn">👁</button>
-                    </div>
-                    <img src="img/product1.png" alt="Product" class="custom-product-img">
-                    <button class="custom-cart-btn">Add To Cart</button>
-                    <p class="custom-product-category">Category</p>
-                    <h3 class="custom-product-name">Product 1</h3>
-                    <div class="custom-product-price">
-                        <span class="custom-new-price">$20.00</span>
-                        <span class="custom-old-price">$30.00</span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-4 col-sm-6">
-                <div class="custom-product-card">
-                    <!-- <span class="custom-sale-badge">Sale!</span> -->
-                    <div class="custom-product-actions">
-                        <button class="custom-icon-btn">♡</button>
-                        <button class="custom-icon-btn">👁</button>
-                    </div>
-                    <img src="img/product1.png" alt="Product" class="custom-product-img">
-                    <button class="custom-cart-btn">Add To Cart</button>
-                    <p class="custom-product-category">Category</p>
-                    <h3 class="custom-product-name">Product 1</h3>
-                    <div class="custom-product-price">
-                        <span class="custom-new-price">$20.00</span>
-                        <span class="custom-old-price">$30.00</span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-4 col-sm-6">
-                <div class="custom-product-card">
-                    <!-- <span class="custom-sale-badge">Sale!</span> -->
-                    <div class="custom-product-actions">
-                        <button class="custom-icon-btn">♡</button>
-                        <button class="custom-icon-btn">👁</button>
-                    </div>
-                    <img src="img/product1.png" alt="Product" class="custom-product-img">
-                    <button class="custom-cart-btn">Add To Cart</button>
-                    <p class="custom-product-category">Category</p>
-                    <h3 class="custom-product-name">Product 1</h3>
-                    <div class="custom-product-price">
-                        <span class="custom-new-price">$20.00</span>
-                        <span class="custom-old-price">$30.00</span>
-                    </div>
-                </div>
-            </div>
+
+
         </div>
     </div>
 </section>
@@ -328,92 +233,102 @@
     <div class="container">
         <div class="ward-furniture-header">
             <h2 class="ward-furniture-title">WARD FURNITURE / EQUIPMENT</h2>
-            <a href="#" class="ward-furniture-view-all">VIEW ALL PRODUCTS</a>
+            <a href="{{ route('products.byCategory', 9) }}" class="ward-furniture-view-all" style="position: relative; z-index: 10;">VIEW ALL PRODUCTS</a>
         </div>
 
         <div class="ward-furniture-grid py-5">
-            <!-- Product Card -->
-            <div class="ward-furniture-card">
-                <div class="ward-furniture-badge">Sale!</div>
-                <img src="img/ward_furniture1.png" alt="Product 1" class="ward-furniture-img">
-                <p class="ward-furniture-category">Accessories</p>
-                <h3 class="ward-furniture-name">Product 1</h3>
-                <p class="ward-furniture-price"><span class="current">$20.00</span> - <span class="old">$30.00</span></p>
-            </div>
+            @forelse($ward_furnitures as $furniture)
+             @if($loop->first) @continue @endif
+                <div class="ward-furniture-card">
+                     @if($product->product_discount_price < $product->product_original_price)
+                    <div class="ward-furniture-badge">Sale!</div>
+                    @endif
+                    <img src="{{asset('uploads/products/'.$furniture->product_image)}}"
+                         alt="{{$furniture->product_name}}"
+                         class="ward-furniture-img">
+                    <h3 class="ward-furniture-name">{{$furniture->product_name}}</h3>
+                    <p class="ward-furniture-price">
+                        <span class="current">{{formatRupees($furniture->product_discount_price)}}</span> -
+                        <span class="old">{{formatRupees($furniture->product_original_price)}}</span>
+                    </p>
+                </div>
+            @empty
+                <p>No products available</p>
+            @endforelse
 
-            <div class="ward-furniture-card">
-                <img src="img/ward_furniture4.png" alt="Product 2" class="ward-furniture-img">
-                <p class="ward-furniture-category">Medicine</p>
-                <h3 class="ward-furniture-name">Product 1</h3>
-                <p class="ward-furniture-price"><span class="current">$39.85</span></p>
-            </div>
-
-            <div class="ward-furniture-card">
-                <img src="img/ward_furniture3.png" alt="Product 3" class="ward-furniture-img">
-                <p class="ward-furniture-category">Equipment</p>
-                <h3 class="ward-furniture-name">Product 1</h3>
-                <p class="ward-furniture-price"><span class="current">$96.85</span></p>
-            </div>
-
-            <!-- Promo Card -->
+            @if($ward_furnitures->isNotEmpty())
+             @php $promoProduct = $ex_tables->first(); @endphp
             <div class="ward-furniture-promo">
                 <p class="ward-furniture-promo-title">EXTRA 9% SAVING ON ORDER</p>
+
+                @php $promoProduct = $ward_furnitures->first(); @endphp
                 <p class="ward-furniture-price">
-                    <span class="current">$80.00</span> – <span class="old">$120.00</span>
+                    <span class="current">{{formatRupees($promoProduct->product_discount_price)}}</span> –
+                    <span class="old">{{formatRupees($promoProduct->product_original_price)}}</span>
                 </p>
-                <a href="#" class="ward-furniture-shop-btn">SHOP NOW</a>
-                <img src="img/ward_furniture2.png" alt="Promo Product" class="ward-furniture-img">
+                <a href="{{ route('product.view', $promoProduct->id) }}" class="ward-furniture-shop-btn">SHOP NOW</a>
+                <img src="{{ asset('uploads/products/' . $promoProduct->product_image) }}"
+                     alt="{{$promoProduct->product_name}}"
+                     class="ward-furniture-img">
             </div>
+            @endif
         </div>
     </div>
 </section>
+
 
 
 <section class="examination-tables-section py-5">
     <div class="container">
         <div class="examination-tables-header">
             <h2 class="examination-tables-title">EXAMINATION TABLES</h2>
-            <a href="#" class="examination-tables-view-all">VIEW ALL PRODUCTS</a>
+            <a href="{{ route('products.byCategory','5') }}"
+               class="examination-tables-view-all"
+               style="position: relative; z-index: 10;">
+               VIEW ALL PRODUCTS
+            </a>
         </div>
 
         <div class="examination-tables-grid py-5">
-            <!-- Promo Card (Left Side) -->
-            <div class="examination-tables-promo">
-                <p class="examination-tables-promo-title">EXTRA 9% SAVING ON ORDER</p>
-                <p class="examination-tables-price">
-                    <span class="current">$150.00</span> – <span class="old">$200.00</span>
-                </p>
-                <a href="#" class="examination-tables-shop-btn">SHOP NOW</a>
-                <img src="img/exm_tables4.png" alt="Promo Product" class="examination-tables-img">
-            </div>
+            @if($ex_tables->isNotEmpty())
+                @php $promoProduct = $ex_tables->first(); @endphp
+                <div class="examination-tables-promo">
+                    <p class="examination-tables-promo-title">EXTRA 9% SAVING ON ORDER</p>
+                    <p class="examination-tables-price">
+                        <span class="current">{{ formatRupees($promoProduct->product_discount_price) }}</span> –
+                        <span class="old">{{ formatRupees($promoProduct->product_original_price) }}</span>
+                    </p>
+                    <a href="{{ route('product.view', $promoProduct->id) }}" class="examination-tables-shop-btn">SHOP NOW</a>
+                    <img src="{{ asset('uploads/products/'.$promoProduct->product_image) }}"
+                         alt="{{ $promoProduct->product_name }}"
+                         class="examination-tables-img">
+                </div>
+            @endif
 
-            <!-- Product Card 1 -->
-            <div class="examination-tables-card">
-                <div class="examination-tables-badge">Sale!</div>
-                <img src="img/exm_tables1.png" alt="Product 1" class="examination-tables-img">
-                <p class="examination-tables-category">Tables</p>
-                <h3 class="examination-tables-name">Product 1</h3>
-                <p class="examination-tables-price"><span class="current">$120.00</span> - <span class="old">$150.00</span></p>
-            </div>
 
-            <!-- Product Card 2 -->
-            <div class="examination-tables-card">
-                <img src="img/exm_tables2.png" alt="Product 2" class="examination-tables-img">
-                <p class="examination-tables-category">Tables</p>
-                <h3 class="examination-tables-name">Product 2</h3>
-                <p class="examination-tables-price"><span class="current">$180.00</span></p>
-            </div>
-
-            <!-- Product Card 3 -->
-            <div class="examination-tables-card">
-                <img src="img/exm_tables3.png" alt="Product 3" class="examination-tables-img">
-                <p class="examination-tables-category">Tables</p>
-                <h3 class="examination-tables-name">Product 3</h3>
-                <p class="examination-tables-price"><span class="current">$200.00</span></p>
-            </div>
+            @foreach($ex_tables as $product)
+                @if($loop->first) @continue @endif
+                <div class="examination-tables-card">
+                    @if($product->product_discount_price < $product->product_original_price)
+                        <div class="examination-tables-badge">Sale!</div>
+                    @endif
+                    <img src="{{ asset('uploads/products/'.$product->product_image) }}"
+                         alt="{{ $product->product_name }}"
+                         class="examination-tables-img">
+                    <!-- <p class="examination-tables-category">{{ $product->category->name ?? 'Tables' }}</p> -->
+                    <h3 class="examination-tables-name">{{ $product->product_name }}</h3>
+                    <p class="examination-tables-price">
+                        <span class="current">{{ formatRupees($product->product_discount_price) }}</span>
+                        @if($product->product_discount_price < $product->product_original_price)
+                            - <span class="old">{{ formatRupees($product->product_original_price) }}</span>
+                        @endif
+                    </p>
+                </div>
+            @endforeach
         </div>
     </div>
 </section>
+
 
 <section class="testimonials-section">
     <div class="container">
@@ -431,7 +346,7 @@
                             <span>Physiotherapist</span>
                         </div>
                     </div>
-                     <div class="quote">❝</div>
+                    <div class="quote">❝</div>
                 </div>
                 <div class="card">
                     <div class="stars">★★★★★</div>
@@ -443,7 +358,7 @@
                             <span>Neurologist</span>
                         </div>
                     </div>
-                     <div class="quote">❝</div>
+                    <div class="quote">❝</div>
                 </div>
                 <div class="card">
                     <div class="stars">★★★★★</div>
@@ -455,7 +370,7 @@
                             <span>Surgeon</span>
                         </div>
                     </div>
-                     <div class="quote">❝</div>
+                    <div class="quote">❝</div>
                 </div>
                 <div class="card">
                     <div class="stars">★★★★★</div>
@@ -467,7 +382,7 @@
                             <span>Cardiologist</span>
                         </div>
                     </div>
-                     <div class="quote">❝</div>
+                    <div class="quote">❝</div>
                 </div>
             </div>
         </div>
@@ -534,9 +449,98 @@
 </script>
 
 
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const wrapper = document.querySelector('.category-wrapper'); // scroll container
+        const row = wrapper?.querySelector('.category-row'); // inner items
+        const arrows = document.querySelectorAll('.category-arrows .arrow-btn');
+        const leftBtn = arrows[0];
+        const rightBtn = arrows[1];
+
+        if (!wrapper || !row || !leftBtn || !rightBtn) return;
+
+        // scroll amount: 80% of visible area (adjust if you want fixed px)
+        const scrollAmount = Math.round(wrapper.clientWidth * 0.8) || 250;
+
+        function updateArrows() {
+            // at leftmost?
+            leftBtn.disabled = wrapper.scrollLeft <= 0;
+            // at rightmost? small tolerance to avoid rounding issues
+            rightBtn.disabled = wrapper.scrollLeft + wrapper.clientWidth >= wrapper.scrollWidth - 1;
+
+            leftBtn.classList.toggle('disabled', leftBtn.disabled);
+            rightBtn.classList.toggle('disabled', rightBtn.disabled);
+        }
+
+        leftBtn.addEventListener('click', () => {
+            wrapper.scrollBy({
+                left: -scrollAmount,
+                behavior: 'smooth'
+            });
+        });
+
+        rightBtn.addEventListener('click', () => {
+            wrapper.scrollBy({
+                left: scrollAmount,
+                behavior: 'smooth'
+            });
+        });
+
+        // update button states while user scrolls or window resizes
+        wrapper.addEventListener('scroll', updateArrows);
+        window.addEventListener('resize', updateArrows);
+
+        // some images might resize after load — give a small timeout for initial calculation
+        setTimeout(updateArrows, 120);
+    });
+</script>
+
+<script>
+    $(document).ready(function() {
+
+        $('.wishlist-btn').on('click', function(e) {
+            e.preventDefault();
+
+            var button = $(this);
+            var productId = button.data('id');
+
+            @if(!Auth::guard('customer') -> check())
+            window.location.href = "{{ route('customer.login') }}";
+            return;
+            @endif
+
+            $.ajax({
+                url: "{{ url('customer/wishlist/add') }}/" + productId,
+                type: 'POST',
+                data: {},
+                success: function(data) {
+                    if (data.status === 'added') {
+                        button.addClass('active');
+                    } else {
+                        button.removeClass('active');
+                    }
+
+                    updateHeaderCounts();
+                },
+                error: function(err) {
+                    console.error(err);
+                }
+            });
+
+        });
+
+    });
 
 
-
-
-
+    function updateHeaderCounts() {
+        $.ajax({
+            url: "{{ route('customer.counts') }}",
+            type: "GET",
+            success: function(counts) {
+                $('.cart-count').text(counts.cartCount);
+                $('.wishlist-count').text(counts.wishlistCount);
+            }
+        });
+    }
+</script>
 @endsection

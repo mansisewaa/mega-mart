@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\ContactData;
 use App\Models\Content;
 use Illuminate\Http\Request;
@@ -9,6 +10,7 @@ use Auth;
 use File;
 use App\Models\Image;
 use App\Models\Menu;
+use App\Models\Order;
 use App\Models\Products;
 use DB;
 
@@ -18,7 +20,7 @@ class AdminController extends Controller
 
     public function store_image(Request $request)
     {
-        //
+
         $request->validate([
             'image_name' => 'required',
             //'product_type'=>'required',
@@ -26,7 +28,6 @@ class AdminController extends Controller
             'image.*' => 'mimes:jpeg,png,jpg,gif,svg',
 
         ]);
-        //dd($request);
 
         if ($file = $request->hasFile('image')) {
 
@@ -100,29 +101,30 @@ class AdminController extends Controller
     }
 
     //customer orders
-    public function customer_orders()
-    {
-        $data = Order::orderBy('id', 'DESC')->get();
-        if ($data) {
-            foreach ($data as $key => $value) {
-                $item = Item::where('id', $value->product_id)->first();
-                if ($item) {
-                    $data[$key]->product_name = $item->product_name;
-                }
-            }
-            return view('orders.view', compact('data'));
-        }
-    }
+    // public function customer_orders()
+    // {
+    //     $data = Order::orderBy('id', 'DESC')->get();
+    //     if ($data) {
+    //         foreach ($data as $key => $value) {
+    //             $item = Item::where('id', $value->product_id)->first();
+    //             if ($item) {
+    //                 $data[$key]->product_name = $item->product_name;
+    //             }
+    //         }
+    //         return view('orders.view', compact('data'));
+    //     }
+    // }
 
     public function addContent($slug)
     {
         $data = Menu::where('slug', $slug)->first();
-        if ($data->slug == 'products-services') {
+        if ($data->slug == 'products') {
             $products = Products::get();
-            return view('backend.menu.content.view-products', compact('products', 'data'));
-        }elseif ($data->slug == 'contact-us') {
+            $categories = Category::get();
+            return view('backend.menu.content.view-products', compact('products', 'data', 'categories'));
+        } elseif ($data->slug == 'contact-us') {
             $contactUs = ContactData::first();
-            return view('backend.menu.content.addContactUs',compact('contactUs'));
+            return view('backend.menu.content.addContactUs', compact('contactUs'));
         } else {
             $content = Content::where('menu_id', $data->id)->first();
             if ($content) {
@@ -205,81 +207,118 @@ class AdminController extends Controller
         }
     }
 
+
+    public function productsIndex() {}
+
     public function addProducts()
     {
-        return view('backend.menu.content.addproducts');
+        $categories = Category::get();
+        return view('backend.menu.content.addproducts', compact('categories'));
     }
 
     public function storeProducts(Request $request)
     {
         $request->validate([
-            'code' => 'nullable',
-            'title' => 'required',
-            'file' => 'required|mimes:jpeg,png,jpg,svg|max:2048',
-            'description' => 'required',
+            'category_id' => 'required|string|max:250',
+            'code' => 'nullable|string|max:255',
+            'title' => 'required|string|max:255',
+            'file' => 'nullable|mimes:jpeg,png,jpg,svg|max:2048',
+            'description' => 'required|string',
+            'original_price' => 'nullable|numeric',
+            'discount_price' => 'nullable|numeric',
         ]);
+
         DB::beginTransaction();
         try {
 
             $file = $request->file('file');
-            $finfo = new \finfo(FILEINFO_MIME_TYPE);
-            $mime_type = $finfo->file($request->file('file'));
-            if (substr_count($request->file('file'), '.') > 1) {
-                return redirect()->back()->with('error', 'Doube dot in filename');
-            }
-            if ($mime_type != "image/png" && $mime_type != "image/jpeg") {
-                return redirect()->back()->with('error', 'File type not allowed');
-            }
-            $extension = $request->file('file')->getClientOriginalExtension();
-            if ($extension != "jpg" && $extension != "jpeg" && $extension != "png") {
-                return redirect()->back()->with('error', 'File type not allowed');
+
+            if (!$file->isValid()) {
+                return redirect()->back()->with('error', 'File upload failed. Error Code: ' . $file->getError());
+            } else {
+
+                if (substr_count($file->getClientOriginalName(), '.') > 1) {
+                    return redirect()->back()->with('error', 'Invalid file name: Double dot detected.');
+                }
+
+                $finfo = new \finfo(FILEINFO_MIME_TYPE);
+                $mime_type = $finfo->file($file->getPathname());
+
+
+                if ($mime_type == "application/octet-stream") {
+                    $mime_type = $file->getMimeType();
+                }
+
+                $allowedMimeTypes = ["image/png", "image/jpeg", "application/octet-stream"];
+
+                if (!in_array($mime_type, $allowedMimeTypes)) {
+                    return redirect()->back()->with('error', 'Invalid file type: Only JPG and PNG are allowed.');
+                }
+
+                $allowedExtensions = ["jpg", "jpeg", "png"];
+                $extension = strtolower($file->getClientOriginalExtension());
+
+                if (!in_array($extension, $allowedExtensions)) {
+                    return redirect()->back()->with('error', 'Invalid file extension.');
+                }
+
+
+                $fileName = time() . '.' . $extension;
+                $file->move(public_path('uploads/products'), $fileName);
+                $file_path = asset('uploads/products/' . $fileName);
             }
 
-            $fileName = time() . '.' . $request->file->getClientOriginalExtension();
-            Request()->file('file')->move(public_path('uploads/products'), $fileName);
-            $file_path = asset('uploads/products') . '/' . $fileName;
 
-            $product = Products::create([
-                'category' =>  $request->category,
+
+            $products = Products::create([
+                'category_id' => $request->category_id,
                 'product_code' => $request->code,
                 'product_name' => $request->title,
                 'product_image' => $fileName,
                 'product_description' => $request->description,
+                'product_original_price' => $request->original_price,
+                'product_discount_price' => $request->discount_price,
             ]);
+
             DB::commit();
-            return redirect()->route('add-content','products-services')->with('success', 'Product added successfully');
+            return redirect()->route('add-content', 'products')->with('success', 'Product added successfully');
         } catch (\Throwable $th) {
-            //throw $th;
+            DB::rollBack();
             // dd($th->getMessage());
-            DB::rollback();
             return redirect()->back()->with('error', 'Something went wrong: ' . $th->getMessage());
         }
     }
 
+
     public function editProducts($id)
     {
         $product = Products::find($id);
-        return view('backend.menu.content.editproducts', compact('product'));
+        $categories = Category::get();
+        return view('backend.menu.content.editproducts', compact('product', 'categories'));
     }
 
     public function updateProducts(Request $request, $id)
     {
         $request->validate([
-            'code' => 'nullable',
-            'title' => 'required',
+            'category_id' => 'required|string|max:250',
+            'code' => 'nullable|string|max:255',
+            'title' => 'required|string|max:255',
             'file' => 'nullable|mimes:jpeg,png,jpg,svg|max:2048',
-            'description' => 'required',
+            'description' => 'required|string',
+            'original_price' => 'nullable|numeric',
+            'discount_price' => 'nullable|numeric',
         ]);
         DB::beginTransaction();
         try {
 
-
-
-            $product = Products::where('id',$id)->update([
-                'category' =>  $request->category,
+            $product = Products::where('id', $id)->first();
+            $product->update([
+                'category_id' => $request->category_id,
                 'product_code' => $request->code,
                 'product_name' => $request->title,
                 'product_description' => $request->description,
+                'product_original_price' => $request->original_price,
+                'product_discount_price' => $request->discount_price,
             ]);
 
             if ($request->has('file')) {
@@ -301,13 +340,12 @@ class AdminController extends Controller
                 Request()->file('file')->move(public_path('uploads/products'), $fileName);
                 $file_path = asset('uploads/products') . '/' . $fileName;
 
-                $product = Products::where('id',$id)->update([
+                $product->update([
                     'product_image' => $fileName,
                 ]);
-
             }
             DB::commit();
-            return redirect()->route('add-content','products-services')->with('success', 'Product Updated successfully');
+            return redirect()->route('add-content', 'products')->with('success', 'Product Updated successfully');
         } catch (\Throwable $th) {
             //throw $th;
             // dd($th->getMessage());
@@ -316,8 +354,16 @@ class AdminController extends Controller
         }
     }
 
+    public function deleteProducts($id)
+    {
+        $product = Products::find($id);
+        $product->delete();
+        return redirect()->back()->with('success', 'Product deleted successfully');
+    }
 
-    public function updateContactUs(Request $request) {
+
+    public function updateContactUs(Request $request)
+    {
         $request->validate([
             'address' => 'required',
             'mail' => 'required',
@@ -338,7 +384,29 @@ class AdminController extends Controller
             DB::rollback();
             return redirect()->back()->with('error', 'Something went wrong: ' . $th->getMessage());
         }
+    }
 
+
+    public function getOrders()
+    {
+        $orders = Order::with('items.product')->get();
+        return  view('backend.orders', compact('orders'));
+    }
+
+    public function updateOrderStatus(Request $request,$id)
+    {
+        try {
+            $order = Order::where('id',$id)->first();
+            $order->update([
+                'status' => $request->status,
+                'expected_delivery_date' =>$request->delivery_date,
+            ]);
+
+            return redirect()->back()->with('success', 'Order updated successfully.');
+        } catch (\Throwable $th) {
+            //throw $th;
+            return redirect()->back()->with('error', 'Something went wrong: ' . $th->getMessage());
+        }
     }
 
 

@@ -38,10 +38,10 @@
                 </li> -->
             </ul>
         </div>
-
+        @include('backend.flash_message')
         <div class="row">
             <div class="col-md-6">
-                @include('backend.flash_message')
+
                 <div class="card">
                     <div class="card-header">
                         <h3 class="card-title">Add</h3>

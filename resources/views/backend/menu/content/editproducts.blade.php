@@ -43,7 +43,7 @@
                 @include('backend.flash_message')
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title"> Add Products</h3>
+                        <h3 class="card-title"> Edit Product</h3>
                     </div>
                     <div class="card-body">
 
@@ -53,12 +53,14 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Category</label>
-                                        <select name="category" id="" class="form-control" required>
+                                        <select name="category_id" id="" class="form-control" required>
                                             <option value="">Select Category</option>
-                                            <option value="Hospital Beds" {{ $product->category == 'Hospital Beds' ? 'selected' : '' }}>Hospital Beds</option>
-                                            <option value="Delivery Beds"  {{ $product->category == 'Delivery Beds' ? 'selected' : '' }}>Delivery Beds</option>
-                                            <option value="Trolleys"  {{ $product->category == 'Trolleys' ? 'selected' : '' }}>Trolleys</option>
-                                            <option value="Others"  {{ $product->category == 'Others' ? 'selected' : '' }}>Others</option>
+                                            @foreach($categories as $category)
+                                            <option value="{{ $category->id }}"
+                                                {{ isset($product) && $product->category_id == $category->id ? 'selected' : '' }}>
+                                                {{ $category->name }}
+                                            </option>
+                                            @endforeach
                                         </select>
                                     </div>
                                 </div>
@@ -83,40 +85,28 @@
                                         <label for="exampleInputEmail1">Image</label>
                                         <input type="file" class="form-control" id="" name="file">
                                         @if($product->product_image)
-                                    <a href="{{ asset('uploads/products/' . $product->product_image) }}" class="btn btn-primary btn-sm mt-7">view</a>
-                                @endif
+                                        <a href="{{ asset('uploads/products/' . $product->product_image) }}" class="btn btn-primary btn-sm" style="margin:1rem;">View</a>
+                                        @endif
                                     </div>
                                 </div>
 
                             </div>
-                            <!-- <div class="row">
+                           <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="exampleInputEmail1">Code</label>
-                                        <input type="text" class="form-control" id="" name="code" value="{{$product->product_code}}">
+                                        <label for="exampleInputEmail1">Original Price</label>
+                                        <input type="number" class="form-control" id="" name="original_price" value="{{$product->product_original_price}}">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="exampleInputEmail1">Name</label>
-                                        <input type="text" class="form-control" id="" name="title" required value="{{$product->product_name}}">
+                                        <label for="exampleInputEmail1">Discounted Price</label>
+                                        <input type="number" class="form-control" id="" name="discount_price" value="{{$product->product_discount_price}}">
                                     </div>
                                 </div>
 
                             </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="exampleInputEmail1">Image</label>
-                                        <input type="file" class="form-control" id="" name="file" required>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                @if($product->product_image)
-                                    <a href="{{ asset('uploads/products/' . $product->product_image) }}" class="btn btn-primary btn-sm mt-7">view</a>
-                                @endif
-                                </div>
-                            </div> -->
+
 
                             <div class="form-group">
                                 <label for="exampleInputEmail1">Description</label>

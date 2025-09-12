@@ -1,106 +1,320 @@
 @extends('layouts.app')
 <style>
-    .banner-section {
-        background-image: url();
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-        color: #fff;
-        text-align: center;
-        padding: 90px 30px;
+    /* Custom styles to match the provided layout */
+    /* body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #ffffff;
+        } */
+
+    .products-container {
+        max-width: 1200px;
+        margin: 50px auto;
+        background-color: #fff;
+        padding: 2rem;
+        border-radius: 15px;
     }
 
-    .banner-section h1 {
-        margin: 0;
-        font-size: 2rem;
+    /* Image gallery styles */
+    .main-image-container {
+        background-color: #f8f9fa;
+        border-radius: 2px;
+        padding: 5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 424px;
     }
 
-    .banner-section p {
-        font-size: 1.2rem;
-        margin: 15px 0 0;
+    .main-product-image {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
     }
 
-    .header {
-        text-align: center;
-        margin-bottom: 40px;
+    .thumbnail-gallery {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
     }
 
-    .product-details-section {
-        padding: 50px 0;
+    .thumbnail-container {
+        background-color: #f8f9fa;
+        border-radius: 2px;
+        padding: 1rem;
+        cursor: pointer;
+        border: 2px solid transparent;
+        transition: border-color 0.3s ease;
     }
 
-    .product-image {
-        max-height: 350px;
+    .thumbnail-container:hover,
+    .thumbnail-container.active {
+        border-color: #4a69bd;
     }
 
-
-    .product-image img {
+    .thumbnail-img {
         width: 100%;
-        border-radius: 10px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 5px;
+        object-fit: cover;
+    }
+
+    /* Product details styles */
+    .product-title {
+        font-weight: 600;
+        color: #343a40;
+        font-size: 2.5rem;
+    }
+
+    .star-rating .fa-star {
+        color: #ffc107;
+        /* Yellow for filled stars */
+    }
+
+    .star-rating .fa-star.empty {
+        color: #e4e5e9;
+        /* Light grey for empty stars */
+    }
+
+    .price-range {
+        font-size: 22px !important;
+        font-weight: 600;
+        color: #4a69bd;
+        margin-top: 1rem;
+        color: #3C66CF;
+    }
+
+    .product-description p {
+        color: #6c757d;
+        margin-top: 1.5rem;
+        font-family: 'DM Sans', sans-serif;
+        font-weight: 400;
+        font-size: 16px !important;
+        line-height: 26px;
+        letter-spacing: 0%;
+        vertical-align: middle;
+
+    }
+
+    /* Quantity selector styles */
+    .quantity-selector {
+        display: flex;
+        align-items: center;
+        background-color: #f8f9fa;
+        border-radius: 30px;
+        padding: 5px;
+        width: fit-content;
+    }
+
+    .quantity-btn {
+        background-color: #fff;
+        border: 1px solid #dee2e6;
+        color: #495057;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        font-size: 1.2rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .quantity-btn:hover {
+        background-color: #e9ecef;
+    }
+
+    .quantity-input {
+        width: 50px;
+        text-align: center;
+        border: none;
+        background-color: transparent;
+        font-weight: 600;
+        font-size: 1.1rem;
+        color: #343a40;
+    }
+
+    /* Hide number input spinners */
+    .quantity-input::-webkit-outer-spin-button,
+    .quantity-input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    input[type=number] {
+        -moz-appearance: textfield;
+    }
+
+    /* Add to cart button styles */
+    .add-to-cart-btn {
+        background: linear-gradient(180deg, #1F5FFF 0%, #95B5FD 100%);
+        color: #fff;
+        border: none;
+        padding: 0.8rem 2rem;
+        border-radius: 30px;
+        /* transition: background-color 0.3s ease; */
+        font-family: 'DM Sans', sans-serif;
+        font-weight: 700;
+        font-style: Bold;
+        font-size: 14px;
+        text-align: center;
+        vertical-align: middle;
+        text-transform: uppercase;
+
+    }
+
+    .add-to-cart-btn:hover {
+        background-color: #4a69bd;
+        color: #fff;
+    }
+
+    .original-price {
+        text-decoration: line-through;
+        color: #888;
     }
 
     .product-info {
-        padding: 20px;
-        text-align: left;
+        margin-top: 0.8rem;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 14px;
+        font-weight: 500;
+        color: #6c757d;
+        letter-spacing: 0.3px;
     }
 
-    .productInfo h1, p {
-        text-align: center;
-        font-size: 25px !important;
-        margin: 10px;
+    .product-info .separator {
+        margin: 0 8px;
+        color: #aaa;
     }
 
-    .product-code {
-        font-style: italic;
+    .product-info .product-category {
+        color: #3C66CF;
+        /* matches price blue tone */
+        font-weight: 600;
+    }
+
+    .product-info .product-code {
         color: #555;
     }
 
-    .product-price {
-        font-size: 1.5rem;
-        color: #900;
-        margin-top: 15px;
-    }
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .thumbnail-gallery {
+            flex-direction: row;
+            justify-content: center;
+            margin-top: 1rem;
+        }
 
-    .btn-primary {
-        background-color: #900;
-        border: none;
-        padding: 10px 20px;
-        font-size: 1rem;
-        border-radius: 5px;
-    }
+        .thumbnail-container {
+            width: 80px;
+        }
 
-    .btn-primary:hover {
-        background-color: #700;
+        .product-title {
+            font-size: 2rem;
+            text-align: center;
+        }
+
+        .product-details-col {
+            text-align: center;
+        }
+
+        .actions-row {
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .quantity-selector {
+            margin-bottom: 1rem;
+        }
     }
 </style>
-
 @section('content')
-<!-- <section class="banner-section">
-    <div class="container">
-        <h1>Products & Services</h1>
-    </div>
-</section> -->
-<section class="product-details-section">
-    <div class="header">
-        <h2>Product Details</h2>
-    </div>
-    <div class="container">
-        <div class="row">
-            <div class="col-md-6">
-                <div class="product-image">
-                    <img src="{{ asset('uploads/products/' . $data->product_image) }}" alt="{{ $data->product_name }}" class="img-fluid">
-                    <div class="productInfo">
-                        <h1>{{ $data->product_name }}</h1>
-                        <p class="product-code"><strong>Product Code</strong>: {{ $data->product_code }}</p>
+
+
+<div class="container products-container" style="padding:20px;">
+    <div class="row align-items-center">
+        <!-- Column 1: Image Gallery -->
+        <div class="col-lg-7">
+            <div class="row">
+                <!-- Thumbnails -->
+                <div class="col-md-2 order-md-1">
+                    <div class="thumbnail-gallery">
+                        <div class="thumbnail-container active">
+                            <img src="{{asset('uploads/products/'.$product->product_image)}}" alt="Product Thumbnail 1" class="thumbnail-img">
+                        </div>
+                        <div class="thumbnail-container">
+                            <img src="{{asset('uploads/products/'.$product->product_image)}}" alt="Product Thumbnail 2" class="thumbnail-img">
+                        </div>
+                        <div class="thumbnail-container">
+                            <img src="{{asset('uploads/products/'.$product->product_image)}}" alt="Product Thumbnail 3" class="thumbnail-img">
+                        </div>
+                        <div class="thumbnail-container">
+                            <img src="{{asset('uploads/products/'.$product->product_image)}}" alt="Product Thumbnail 4" class="thumbnail-img">
+                        </div>
+                    </div>
+                </div>
+                <!-- Main Image -->
+                <div class="col-md-10 order-md-2">
+                    <div class="main-image-container">
+                        <img src="{{asset('uploads/products/'.$product->product_image)}}" alt="Main Product Image" class="main-product-image" id="main-product-image">
                     </div>
                 </div>
             </div>
-            <div class="col-md-6">
-                <div class="product-info">
-                    <p class="product-description"> <span style="font-size: 20px;"><strong>Description</strong></span> </br>{!!$data->product_description !!}</p>
-                </div>
-            </div>
         </div>
-</section>
+
+        <!-- Column 2: Product Details -->
+        <div class="col-lg-5 mt-4 mt-lg-0 product-details-col">
+            <h1 class="product-title">{{$product->product_name}}</h1>
+
+            <!-- Category & Code -->
+            <div class="product-info">
+                <span class="product-category">{{$product->category->name ?? 'Uncategorized'}}</span>
+                <span class="separator">|</span>
+                <span class="product-code">Code: {{$product->product_code ?? 'N/A'}}</span>
+            </div>
+            <p class="price-range">
+                ${{$product->product_discount_price}} -
+                <span class="original-price">${{$product->product_original_price}}</span>
+            </p>
+
+            <div class="product-description">
+                {!!$product->product_description!!}
+            </div>
+
+            <form action="{{ route('customer.cart.add', $product->id) }}" method="POST" class="d-flex align-items-center mt-4 actions-row">
+                @csrf
+
+                <!-- Quantity Selector -->
+                <div class="quantity-selector me-3">
+                    <button type="button" class="quantity-btn" id="decrease-qty">-</button>
+                    <input type="number" name="quantity" class="quantity-input" id="quantity-input" value="1" min="1">
+                    <button type="button" class="quantity-btn" id="increase-qty">+</button>
+                </div>
+
+                <!-- Add to Cart Button -->
+                <button type="submit" class="add-to-cart-btn">Add to Cart</button>
+            </form>
+        </div>
+
+    </div>
+</div>
+
+@endsection
+
+@section('js')
+<script>
+    const decreaseBtn = document.getElementById('decrease-qty');
+    const increaseBtn = document.getElementById('increase-qty');
+    const qtyInput = document.getElementById('quantity-input');
+
+    decreaseBtn.addEventListener('click', () => {
+        let current = parseInt(qtyInput.value);
+        if (current > parseInt(qtyInput.min)) {
+            qtyInput.value = current - 1;
+        }
+    });
+
+    increaseBtn.addEventListener('click', () => {
+        let current = parseInt(qtyInput.value);
+        qtyInput.value = current + 1;
+    });
+</script>
 @endsection

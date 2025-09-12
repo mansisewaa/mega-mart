@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -10,11 +10,19 @@
     <meta name="author" content="">
 
     <title>{{ env('APP_NAME') }}</title>
-    <link href="{{asset('css/bootstrap.min.css')}}" rel="stylesheet">
-
     <link href="{{asset('css/bootstrap-icons.css')}}" rel="stylesheet">
 
     <link href="{{asset('css/style.css')}}" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
     @yield('css')
 </head>
 
@@ -70,137 +78,161 @@
 
             <!-- Nav Menu -->
             <ul class="nav-menu">
-                <li><a href="#">HOME</a></li>
-                <li><a href="#">ABOUT US</a></li>
-                <li class="dropdown">
-                    <a href="#">PRODUCTS</a>
-                    <ul class="dropdown-menu">
-                        <li><a href="#">PRODUCT 1</a></li>
-                        <li><a href="#">PRODUCT 2</a></li>
-                        <li><a href="#">PRODUCT 3</a></li>
-                    </ul>
+                <li>
+                    <a href="{{route('index')}}">HOME</a>
                 </li>
-                <li><a href="#">CATALOGUE</a></li>
-                <li><a href="#">GALLERY</a></li>
-                <li><a href="#">CONTACT US</a></li>
+                @foreach($menus as $menu)
+                @if($menu->slug == 'products')
+                <li>
+                    <a href="{{route('products')}}">Products</a>
+                </li>
+                @else
+                <li>
+                    <a href="">{{ strtoupper($menu->name) }}</a>
+                </li>
+                @endif
+                @endforeach
+
+                <!-- Always add Contact Us at the end -->
+                <li>
+                    <a href="{{route('contact-us')}}">CONTACT US</a>
+                </li>
             </ul>
 
             <!-- Icons -->
             <div class="nav-icons">
-                <a href="#" class="icon-link">
+
+                <a href="{{route('customer.cart')}}" class="icon-link">
                     <i class="bi bi-cart"></i>
-                    <span class="count">5</span>
+                    <span class="count cart-count">{{$cartCount}}</span>
                 </a>
-                <a href="#" class="icon-link">
+                <a href="{{route('customer.wishlist')}}" class="icon-link">
                     <i class="bi bi-heart"></i>
-                    <span class="count">3</span>
+                    <span class="count wishlist-count">{{$wishlistCount}}</span>
                 </a>
+                @if(Auth::guard('customer')->check())
+                <div class="dropdown d-inline">
+                    <button class="btn-white btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        {{ Auth::guard('customer')->user()->name }}
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{{ route('customer.dashboard') }}">Dashboard</a></li>
+                        <li><a class="dropdown-item" href="{{ route('customer.orders.show') }}">My Orders</a></li>
+                        <li><a class="dropdown-item" href="{{ route('customer.wishlist') }}">Wishlist</a></li>
+                        <li><a class="dropdown-item" href="{{ route('customer.cart') }}">Cart</a></li>
+                        <li>
+                            <form method="POST" action="{{ route('customer.logout') }}">
+                                @csrf
+                                <button type="submit" class="dropdown-item">Logout</button>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
+                @else
+                <a href="{{ route('customer.login') }}" class=" btn-white btn-sm">
+                    Login
+                </a>
+                @endif
             </div>
         </div>
     </nav>
-
-
-
-
-
 
     <main>
         @yield('content')
     </main>
 
-    <footer class="site-footer">
+    <footer class="footer">
         <div class="container">
-            <div class="row">
-                <div class="col-lg-3 col-sm-6 col-12 mb-4">
-                    <img src="{{asset('images/logo.png  ')}}" class="logo img-fluid" alt="">
+            <!-- Contact Us -->
+            <div class="footer-col">
+                <h4>Contact Us</h4>
+                <p>Manufacturer of Quality Medical Equipment for Better Healthcare.</p>
+                <ul class="contact-info">
+                    <li><i class="fa fa-map-marker"></i> 2478 Street City Ohio 90255</li>
+                    <li><i class="fa fa-envelope"></i> info@mediax.com</li>
+                    <li><i class="fa fa-phone"></i> + (402) 763 282 46</li>
+                </ul>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                    <a href="#"><i class="fab fa-whatsapp"></i></a>
                 </div>
+            </div>
 
-                <div class="col-lg-4 col-md-6 mb-4">
-                    <h5 class="site-footer-title mb-3" style="color: whitesmoke;">Quick Links</h5>
+            <!-- Quick Links -->
+            <div class="footer-col">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Terms of Use</a></li>
+                    <li><a href="#">Product Catalogue</a></li>
+                    <li><a href="#">Contact Us</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                </ul>
+            </div>
 
-                    <ul class="footer-menu">
-                        <li class="footer-menu-item"><a href="javascript:void(0);" class="footer-menu-link">Brochure</a></li>
+            <!-- Popular Categories -->
+            <div class="footer-col">
+                <h4>Popular Categories</h4>
+                <ul>
+                    <li><a href="#">Hospital Beds</a></li>
+                    <li><a href="#">Infant & Childcare Equipment</a></li>
+                    <li><a href="#">Obstetric & Gynecology</a></li>
+                    <li><a href="#">Examination Tables</a></li>
+                    <li><a href="#">OT Furniture / Trolleys</a></li>
+                </ul>
+            </div>
 
-                        <li class="footer-menu-item"><a href="javascript:void(0);" class="footer-menu-link">Products & Services</a></li>
-
-                        <li class="footer-menu-item"><a href="javascript:void(0);" class="footer-menu-link">Certifications</a></li>
-                    </ul>
-                </div>
-
-                <div class="col-lg-4 col-md-6 col-12 mx-auto">
-                    <h5 class="site-footer-title mb-3" style="color: whitesmoke;">Contact Infomation</h5>
-
-                    <p class="text-white d-flex mb-2">
-                        <i class="bi-telephone me-2"></i>
-
-                        <a href="tel: +91 8638878812" class="site-footer-link">+91 8638878812
-                        </a>
-                    </p>
-
-                    <p class="text-white d-flex">
-                        <i class="bi-envelope me-2"></i>
-
-                        <a href="mailto:info@yourgmail.com" class="site-footer-link">
-                            valstandhealthcare@gmail.com
-                        </a>
-                    </p>
-
-                    <p class="text-white d-flex mt-3">
-                        <i class="bi-geo-alt me-2"></i>
-                        Bylane 1, Miljuli Path, Rajib Gandhi Path,
-                        Dhopolia, Jyotikuchi, Guwahati, Pin-781040
-                        Assam, India
-                    </p>
-
-                    <a href="https://maps.app.goo.gl/Wmhgs29GZ8Tu8bBp9" class="custom-btn btn mt-3" target="_blank">Get Direction</a>
-                </div>
+            <!-- Newsletter -->
+            <div class="footer-col">
+                <h4>Let’s Stay In Touch</h4>
+                <form class="newsletter">
+                    <input type="email" placeholder="Enter Email">
+                    <button type="submit"><i class="fa fa-paper-plane"></i></button>
+                </form>
             </div>
         </div>
 
-        <div class="site-footer-bottom">
-            <div class="container">
-                <div class="row">
 
-                    <div class="col-lg-6 col-md-7 col-12">
-                        <p class="copyright-text mb-0">Copyright © 2024 <a href="#">
-                                Design: <a href="" target="_blank">Indigi Consulting and Solutions Privaate Limited</a></p>
-                    </div>
-
-                    <div class="col-lg-6 col-md-5 col-12 d-flex justify-content-center align-items-center mx-auto">
-                        <ul class="social-icon">
-                            <li class="social-icon-item">
-                                <a href="#" class="social-icon-link bi-twitter"></a>
-                            </li>
-
-                            <li class="social-icon-item">
-                                <a href="#" class="social-icon-link bi-facebook"></a>
-                            </li>
-
-                            <li class="social-icon-item">
-                                <a href="#" class="social-icon-link bi-instagram"></a>
-                            </li>
-
-                            <li class="social-icon-item">
-                                <a href="#" class="social-icon-link bi-linkedin"></a>
-                            </li>
-
-                            <li class="social-icon-item">
-                                <a href="https://youtube.com/templatemo" class="social-icon-link bi-youtube"></a>
-                            </li>
-                        </ul>
-                    </div>
-
-                </div>
-            </div>
-        </div>
     </footer>
+    <div class="footer-bottom">
+        <p>Copyright © 2024</p>
+        <p>Total Visitor : xxxxxxxx</p>
+    </div>
+
+    @if(session('error') || session('success'))
+    <div class="position-fixed top-0 end-0 p-3" style="z-index: 1055">
+        <div id="liveToast" class="toast align-items-center text-bg-{{ session('error') ? 'danger' : 'success' }} border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body">
+                    {{ session('error') ?? session('success') }}
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var toastEl = document.getElementById('liveToast');
+            var toast = new bootstrap.Toast(toastEl);
+            toast.show();
+        });
+    </script>
+    @endif
+
 
     <!-- JAVASCRIPT FILES -->
     <script src="{{asset('js/jquery.min.js')}}"></script>
-    <script src="{{asset('js/bootstrap.min.js')}}"></script>
+    <!-- <script src="{{asset('js/bootstrap.min.js')}}"></script> -->
     <script src="{{asset('js/click-scroll.js')}}"></script>
     <script src="{{asset('js/counter.js')}}"></script>
     <script src="{{asset('js/custom.js')}}"></script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     @yield('js')
 
     <script>
@@ -283,14 +315,21 @@
             });
         });
     </script>
-<script>
-    lightbox.option({
-        resizeDuration: 200,
-        wrapAround: true,
-        fadeDuration: 300,
-        imageFadeDuration: 300
-    });
-</script>
+    <script>
+        lightbox.option({
+            resizeDuration: 200,
+            wrapAround: true,
+            fadeDuration: 300,
+            imageFadeDuration: 300
+        });
+    </script>
+    <script>
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+    </script>
 </body>
 
 </html>

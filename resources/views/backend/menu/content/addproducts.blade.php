@@ -53,12 +53,11 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Category</label>
-                                        <select name="category" id="" class="form-control" required>
+                                        <select name="category_id" id="" class="form-control" required>
                                             <option value="">Select Category</option>
-                                            <option value="Hospital Beds">Hospital Beds</option>
-                                            <option value="Delivery Beds">Delivery Beds</option>
-                                            <option value="Trolleys">Trolleys</option>
-                                            <option value="Others">Others</option>
+                                            @foreach($categories as $category)
+                                                <option value="{{$category->id}}">{{$category->name}}</option>
+                                            @endforeach
                                         </select>
                                     </div>
                                 </div>
@@ -86,12 +85,27 @@
                                 </div>
 
                             </div>
+                             <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Original Price</label>
+                                        <input type="number" class="form-control" id="" name="original_price">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Discounted Price</label>
+                                        <input type="number" class="form-control" id="" name="discount_price" required>
+                                    </div>
+                                </div>
+
+                            </div>
 
 
 
                             <div class="form-group">
-                                <label for="exampleInputEmail1">Description</label>
-                                <textarea name="description" id="description" cols="30" rows="10"></textarea>
+                                <label for="exampleInputEmail1">Specifications</label>
+                                <textarea name="description" id="description" cols="5"></textarea>
                             </div>
 
 

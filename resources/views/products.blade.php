@@ -1,188 +1,218 @@
 @extends('layouts.app')
-<!-- Include Swiper.js CSS -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
 <style>
-    .banner-section {
-        background-image: url('images/bannerbg7.jpg');
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-        color: #fff;
-        text-align: center;
-        padding: 90px 30px;
+    .product-section {
+        display: flex;
+
     }
 
-    .banner-section h1 {
+    /* Sidebar */
+    .sidebar {
+        /* width: 250px; */
+        padding: 25px;
+        /* border-right: 1px solid #e5e5e5; */
+        min-height: 100vh;
+        background: #fafafa;
+    }
+
+    .sidebar h3 {
+        font-size: 18px;
+        margin-bottom: 15px;
+        font-weight: bold;
+    }
+
+    .sidebar ul {
+        list-style: none;
+        padding: 0;
         margin: 0;
-        font-size: 2rem;
     }
 
-    .banner-section p {
-        font-size: 1.2rem;
-        margin: 15px 0 0;
+    ul li {
+        font-size: 16px !important;
     }
 
-    .content {
-        margin: 2rem;
+    .sidebar li {
+        padding: 5px;
+        cursor: pointer;
+        border-radius: 6px;
+        transition: 0.2s;
     }
 
-    .headline {
-        font-size: 1.5rem;
+    .sidebar li:hover {
+        background: #f2f2f2;
+    }
+
+    .sidebar li.active {
+        background: #1F5FFF;
+        color: #fff;
+        font-weight: bold;
+    }
+
+    /* Product grid */
+    .products {
+        flex: 1;
+        padding: 20px;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        gap: 15px;
+        /* control spacing between rows & columns */
+        align-items: start;
+    }
+
+    .product-card {
+        border: 1px solid #ddd !important;
+        border-radius: 6px !important;
+        padding: 10px !important;
+        cursor: pointer;
+        transition: 0.2s;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between; /* distribute content evenly */
+        height: 300px !important;        /* keep uniform height */
     }
 
     .product-card:hover {
-        transform: translateY(-5px);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        transform: translateY(-3px);
     }
 
     .product-card img {
         width: 100%;
-        height: 200px;
-        object-fit: cover;
-        border-radius: 5px;
+        height: 203px;
+        object-fit: contain;
+        border-radius: 4px;
+        background: #f9f9f9;
     }
 
-    .details {
-        flex-grow: 1;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        height: auto;
-        margin-top: 0.5rem;
-        gap: 0.3rem;
+    .product-card h4 {
+        font-size: 14px;
+        margin: 8px 0 4px;
+        text-align: center;
+        line-height: 1.2em;
+        max-height: 2.4em;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        color: #1F5FFF;
     }
 
-    .read-more {
-        display: inline-block;
-        color: #900;
-        font-weight: bold;
+    .product-card p {
+        font-size: 13px;
+        color: black;
+        margin: 0;
+        font-weight: 600;
+    }
+
+    .hidden {
+        display: none !important;
+    }
+
+    .product-card a {
+        all: unset;
+        display: block;
+        width: 100%;
+        height: 100%;
+        cursor: pointer;
+        text-align: center;
+    }
+
+    .product-card a h4 {
+        color: #1F5FFF;
         text-decoration: none;
     }
-    h4 {
-        font-size: 1.2rem !important;
+
+    .product-card a p {
+        color: black;
+        font-weight: 600;
     }
 
-
-    .swiper {
-        position: relative;
-        max-height: 500px;
-    }
-
-    .swiper-slide {
-        display: flex;
-        align-items: stretch;
-        margin-top: 1rem;
-        height: auto !important;
-    }
-
-    .product-card {
+    /* No products message */
+    #noProducts {
+        grid-column: 1 / -1;
         text-align: center;
-        background: #fff;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        transition: transform 0.3s ease;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        height: 55%;
-    }
-
-
-
-    /* Swiper Buttons Styles */
-    .swiper-button-prev,
-    .swiper-button-next {
-        position: absolute;
-        top: 28%;
-        transform: translateY(-50%);
-        color: #900;
-        border: 1px solid #900;
-        padding: 23px 25px;
-        font-size: 14px !important;
-        transition: 0.3s ease;
-        background: rgba(255, 255, 255, 0.8);
-        /* border-radius: 50%; */
-        z-index: 10;
-    }
-
-    .swiper-button-prev:hover,
-    .swiper-button-next:hover {
-        background: #990000;
-        color: #fff;
-    }
-
-    .swiper-button-prev {
-        left: 5px;
-    }
-
-    .swiper-button-next {
-        right: 5px;
+        padding: 60px 20px;
+        font-size: 18px;
+        color: #777;
     }
 </style>
 
 @section('content')
-<section class="banner-section">
-    <div class="container">
-        <h1>Products & Services</h1>
-    </div>
-</section>
-<section class="product-section">
-    <div class="container content">
-        @foreach($products as $categoryName => $productList)
-        <div class="row text-center headline">
-            <h3 class="header">{{ $categoryName }}</h3>
-            <p style="font-style: italic;">Browse our range of high-quality {{ strtolower($categoryName) }} designed for comfort and functionality.</p>
-        </div>
 
-        <!-- Swiper Carousel -->
-        <div class="swiper mySwiper">
-            <div class="swiper-wrapper"  style="margin-bottom: .2rem;">
-                @foreach($productList as $product)
-                <div class="swiper-slide">
-                    <div class="product-card">
-                        <img src="{{ asset('uploads/products/' . $product->product_image) }}" alt="{{ $product->product_name }}" class="img-fluid">
-                        <div class="details">
-                            <p>{{$product->product_code}}</p>
-                            <h4>{{ $product->product_name}}</h4>
-                            <a href="{{route('get-description',$product->id)}}" class="read-more">Read More</a>
-                        </div>
-                    </div>
-                </div>
-
+<div class="container">
+    <div class="product-section">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <h3>Categories</h3>
+            <ul id="categoryList">
+                <li class="active" onclick="filterProducts('all', this)">All</li>
+                @foreach($categories as $category)
+                <li onclick="filterProducts('{{ $category->id }}', this)">{{ $category->name }}</li>
                 @endforeach
-            </div>
-
-            <!-- Navigation buttons dynamically placed inside the Swiper container -->
-           <div class="swiper-buttons">
-            <div class="swiper-button-prev"></div>
-            <div class="swiper-button-next"></div>
-           </div>
+            </ul>
         </div>
-        @endforeach
-    </div>
-</section>
 
-<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+        <div class="products" id="productList">
+            @foreach($products as $product)
+            <div class="product-card" data-category="{{ $product->category->id }}">
+                <a href="{{ route('product.view', $product->id) }}">
+                    <img src="{{ asset('uploads/products/'. $product->product_image) }}"
+                        alt="{{ $product->product_name }}">
+                    <h4>{{ $product->product_name }}</h4>
+                    <p>{{ formatRupees($product->product_discount_price) }}</p>
+                </a>
+            </div>
+            @endforeach
+
+            <div id="noProducts" class="hidden">
+                No products found in this category
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-   document.addEventListener("DOMContentLoaded", function () {
-       var swipers = document.querySelectorAll(".mySwiper");
-       swipers.forEach((swiperEl, index) => {
-           new Swiper(swiperEl, {
-               slidesPerView: 4,
-               spaceBetween: 30,
-               navigation: {
-                   nextEl: swiperEl.querySelector(".swiper-button-next"),
-                   prevEl: swiperEl.querySelector(".swiper-button-prev"),
-               },
-               breakpoints: {
-                   768: {
-                       slidesPerView: 4
-                   },
-                   480: {
-                       slidesPerView: 1
-                   }
-               }
-           });
-       });
-   });
+    function filterProducts(category, el = null) {
+        let cards = document.querySelectorAll('.product-card');
+        let found = false;
+
+        cards.forEach(card => {
+            if (category === 'all' || card.dataset.category === category) {
+                card.classList.remove('hidden');
+                found = true;
+            } else {
+                card.classList.add('hidden');
+            }
+        });
+
+        // Toggle "No products" message
+        let noProducts = document.getElementById('noProducts');
+        if (found) {
+            noProducts.classList.add('hidden');
+        } else {
+            noProducts.classList.remove('hidden');
+        }
+
+        // Active state for sidebar
+        if (el) {
+            document.querySelectorAll('.sidebar li').forEach(li => li.classList.remove('active'));
+            el.classList.add('active');
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+        filterProducts('all');
+    });
+
+    document.addEventListener("DOMContentLoaded", function() {
+        let selectedCategory = "{{ $id ?? 'all' }}";
+        let activeLi = document.querySelector(`#categoryList li[onclick*="'${selectedCategory}'"]`);
+        filterProducts(selectedCategory, activeLi);
+    });
 </script>
 @endsection

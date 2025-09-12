@@ -4934,15 +4934,16 @@ label.error {
     vertical-align: middle
 }
 
-.table>tbody>tr>td,
+/* .table>tbody>tr>td,
 .table>tbody>tr>th {
     padding: 16px 24px !important
+} */
+
+.table>tbody>tr>td,
+.table>tbody>tr>th {
+    padding: 0px 13px ;
 }
 
-.table>tfoot>tr>td,
-.table>tfoot>tr>th {
-    padding: 12px 24px !important
-}
 
 .table thead th {
     font-size: .95rem;

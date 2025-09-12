@@ -19,7 +19,7 @@
     <style>
         body {
             text-align: justify;
-        }   
+        }
     </style>
 </head>
 
@@ -29,7 +29,7 @@ $menus = App\Models\Menu::where('status',1)->get();
 @endphp
 
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark" style="background-color:#084c9d;">
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color:#084c9d;">
         <div class="container menus">
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -40,16 +40,28 @@ $menus = App\Models\Menu::where('status',1)->get();
                         <a class="nav-link active" aria-current="page" href="/">HOME</a>
                     </li>
                     @foreach ($menus as $menu)
-                        @if($menu->sublink != 1)
-                            <li class="nav-item">
-                                <a class="nav-link active" aria-current="page" href="{{route('page',$menu->slug)}}" style="text-transform:uppercase;margin-left:.3rem;">{{$menu->name}}</a>
-                            </li>
-                        @else
-                        <li class="nav-item dropdown">
-                            <a class="nav-link active dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="text-transform:uppercase;margin-left:.3rem;">
-                                {{$menu->name}}
-                            </a>
-                            @php
+                    @if($menu->sublink != 1)
+                    @if($menu->slug == 'products')
+                    <a class="nav-link active" href="{{route('products')}}" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="text-transform:uppercase;margin-left:.3rem;">
+                        PRODUCTS
+                    </a>
+
+                    @else
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="{{route('page',$menu->slug)}}" style="text-transform:uppercase;margin-left:.3rem;">{{$menu->name}}</a>
+                    </li>
+                    @endif
+                    @else
+                    <li class="nav-item dropdown">
+
+                        <a class="nav-link active dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="text-transform:uppercase;margin-left:.3rem;">
+                            {{$menu->name}}
+                        </a>
+
+
+
+
+                        <!-- @php
                             $submenus = App\Models\SubMenu::where('menu_id', $menu->id)->get();
                             @endphp
                             <ul class="dropdown-menu" style="background-color:#4e93e4;">
@@ -57,13 +69,11 @@ $menus = App\Models\Menu::where('status',1)->get();
                                 <li><a class="dropdown-item" href="{{route('submenu', [$menu->slug, $submenu->slug])}}" style="color:white;">{{$submenu->name}}</a></li>
                                 @endforeach
                             </ul>
-                        </li>
+                        </li> -->
                         @endif
-                    @endforeach
+                        @endforeach
                 </ul>
                 <a href="/contact_us" class="btn custom-btn1" style="font-size:14px; color:black;">CONTACT US</a>
             </div>
         </div>
     </nav>
-
- 

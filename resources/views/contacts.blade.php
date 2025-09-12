@@ -1,144 +1,199 @@
 @extends('layouts.app')
 <style>
-   .banner-section {
-    background-image: url('images/bannerbg7.jpg');
-    background-size: cover;  /* Ensures the image covers the entire section */
-    background-position: center; /* Centers the background image */
-    background-repeat: no-repeat; /* Prevents the image from repeating */
-    color: #fff;
-    text-align: center;
-    padding: 90px 30px;
-}
-
-    .banner-section h1 {
-        margin: 0;
-        font-size: 3rem;
-    }
-
-    .banner-section p {
-        font-size: 1.2rem;
-        margin: 15px 0 0;
-    }
-
     .contact-section {
-        padding: 60px 30px;
+        padding: 40px 0;
+        background: #f9fafc;
+        font-family: 'Outfit', sans-serif;
     }
 
     .contact-container {
-        max-width: 900px;
+        display: flex;
+        justify-content: space-between;
+        max-width: 1100px;
         margin: auto;
-        padding: 50px 20px;
+        gap: 30px;
     }
 
     .contact-info {
-        padding: 20px;
+        flex: 1;
+        background: #f3f6fb;
+        padding: 25px;
+        border-radius: 10px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
     }
 
-    .contact-info h5 {
-        /* font-weight: bold; */
-        font-size: 17px;
+    .contact-info h2 {
+        margin-bottom: 15px;
+        font-size: 22px;
+        font-weight: bold;
     }
 
-    .contact-info h4 {
-        margin-left: 10px;
+    .contact-info p {
+        margin: 10px 0;
+        font-size: 15px;
+        color: #333;
     }
 
-    .contact-form {
-        background: #f8f9fa;
-        padding: 30px;
-        border-radius: 8px;
-        margin-top: 1rem;
+    .contact-info i {
+        margin-right: 8px;
+        color: #2874f0;
     }
 
-    .btn-primary {
-        background-color: #a51d2d;
-        border: none;
+    .social-icons {
+        margin-top: 15px;
     }
 
-    .btn-primary:hover {
-        background-color: #871620;
+
+
+    .social-icons a {
+        display: inline-block;
+        margin-right: 10px;
+        background: #fff;
+        border-radius: 50%;
+        padding: 10px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        color: #333;
     }
 
-    .icon-box {
+    .social-icons a:hover {
+        background: #2874f0;
+        color: #fff;
+    }
+
+    .contact-form-wrapper {
         display: flex;
-        align-items: center;
+        justify-content: space-between;
+        align-items: flex-end;
+        /* aligns items to the bottom */
+        gap: 12px;
+        flex: 3;
+        background: #f3f6fb;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+        position: relative;
+        /* keep if you have shadows or overflow needs */
+    }
+
+    .contact-image {
+        flex-shrink: 0;
+        /* prevents shrinking */
+    }
+
+    .contact-image img {
+        width: 350px;
+        height: auto;
+        border-radius: 0;
+    }
+
+    .contactform {
+        flex: 1;
+    }
+
+    .contactform label {
+        display: block;
+        margin: 10px 0 5px;
+        font-weight: 500;
+    }
+
+    .contactform input {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
         margin-bottom: 15px;
     }
 
-    .icon-box i {
-        font-size: 27px;
-        color: #a51d2d;
-        margin-right: 10px;
-        margin-bottom: 2rem;
+    .contactform button {
+        display: block;
+        width: 100%;
+        background: linear-gradient(to right, #2874f0, #5c9eff);
+        border: none;
+        padding: 9px;
+        color: #fff;
+        font-size: 14px;
+        border-radius: 25px;
+        cursor: pointer;
+        font-weight: bold;
+        margin-top: 5px;
+    }
+
+    .contactform button:hover {
+        background: linear-gradient(to right, #1f5ec9, #4a8ae6);
     }
 </style>
 @section('content')
-<section class="banner-section">
-    <div class="container">
-        <h1>Contact Us</h1>
-    </div>
-</section>
+
 <section class="contact-section">
-    <div class="container content">
-        <div class="container contact-container">
-            <!-- <h2 class="text-center text-danger">Contact Us</h2> -->
-            <!-- <p class="text-center">Valstand Healthcare Pvt Ltd is one of India’s leading manufacturers of modern hospital furniture and patient mobility equipment.</p>
-            </p> -->
-            <div class="row">
-                <div class="col-md-6 contact-info">
-                    <h4>Committed to Excellence in Healthcare Solutions</h4>
-                    <div class="icon-box">
-                        <i class="bi bi-geo-alt-fill"></i>
-                        <div>
-                            <h5>Visit Us:</h5>
-                            <p>Bylane 1, Miljuli Path, Rajib Gandhi Path, Dhopolia, Jyotikuchi, Guwahati, Assam, India, Pin-781040</p>
-                        </div>
-                    </div>
-                    <div class="icon-box">
-                        <i class="bi bi-envelope-fill"></i>
-                        <div>
-                            <h5>Mail Us:</h5>
-                            <p>valstandhealthcare@gmail.com</p>
-                        </div>
-                    </div>
-                    <div class="icon-box">
-                        <i class="bi bi-telephone-fill"></i>
-                        <div>
-                            <h5>Call Us:</h5>
-                            <p>+91 8638878812</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="contact-form">
-                        <form method="POST" action="{{route('submit-contact')}}" enctype="multipart/form-data">
-                            @csrf
-                            <div class="row">
-                        <div class="col-lg-6 col-md-6 col-12 mb-3">
-                            <input type="text" name="first-name" id="first-name" class="form-control" placeholder="First Name" required>
-                        </div>
+    <div class="contact-container">
 
-                        <div class="col-lg-6 col-md-6 col-12 mb-3">
-                            <input type="text" name="last-name" id="last-name" class="form-control" placeholder="Last Name" required>
-                        </div>
-                    </div>
+        <!-- Left Side -->
+        <div class="contact-info">
+            <h2>Contact Us</h2>
+            <p><i class="fa fa-map-marker"></i> 2478 Street City Ohio 90255</p>
+            <p><i class="fa fa-envelope"></i> info@mediax.com</p>
+            <p><i class="fa fa-phone"></i> + (402) 763 282 46</p>
 
-                    <div class="mb-3">
-                        <input type="email" name="email" id="email" pattern="[^ @]*@[^ @]*" class="form-control" placeholder="Email Address" required>
-                    </div>
+            <div class="social-icons">
 
-                    <div class="mb-3">
-                        <textarea name="message" rows="5" class="form-control" id="message" placeholder="What can we help you with?" required></textarea>
-                    </div>
-
-                    <button type="submit" class="form-control btn btn-sm btn-primary" style="color:#4043a9 ;">Send Message</button>
-
-                        </form>
-                    </div>
-                </div>
+                <a href="#"><i class="fab fa-facebook"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-linkedin"></i></a>
+                <a href="#"><i class="fab fa-whatsapp"></i></a>
             </div>
         </div>
+
+        <!-- Right Side -->
+        <div class="contact-form-wrapper">
+            <form class="contactform" action="{{route('contact-us-store')}}" method="POST" enctype="multipart/form-data">
+                @csrf
+                <label>Name :</label>
+                <input type="text" placeholder="Enter your name" name="name">
+
+                <label>Contact :</label>
+                <input type="text" placeholder="Enter your phone" name="contact">
+
+                <label>Email :</label>
+                <input type="email" placeholder="Enter your email" name="email">
+
+                <label>Company :</label>
+                <input type="text" placeholder="Enter your company" name="company_name">
+
+                <button type="submit">SEND</button>
+            </form>
+
+            <!-- Right Side Image -->
+            <div class="contact-image">
+                <img src="{{asset('img/contact-us-img.png')}}" alt="Support">
+            </div>
+        </div>
+
     </div>
 </section>
+
+@endsection
+@section('js')
+@if(session('success'))
+<script>
+    Swal.fire({
+        icon: 'success',
+        title: 'Query Submitted',
+        text: "{{ session('success') }}",
+        confirmButtonText: 'OK'
+    })
+</script>
+@endif
+
+@if(session('error'))
+<script>
+    Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: "{{ session('error') }}",
+        confirmButtonText: 'OK'
+    })
+</script>
+@endif
 
 @endsection

@@ -13,7 +13,7 @@ class MenuController extends Controller
     public function index()
     {
         $menus = Menu::get();
-        return view('backend.menu.index',compact('menus'));
+        return view('backend.menu`.index',compact('menus'));
     }
 
     public function store(Request $request)
