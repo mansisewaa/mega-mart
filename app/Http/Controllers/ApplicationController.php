@@ -95,15 +95,20 @@ class ApplicationController extends Controller
         }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function getProducts()
     {
 
         $categories = Category::get();
         $products  = Products::where('status', 1)->with('category')->get();
-        return view('products', compact('products', 'categories'));
+
+         $wishlistIds = [];
+        if (Auth::guard('customer')->check()) {
+            $wishlistIds = Wishlist::where('customer_id', Auth::guard('customer')->id())
+                ->pluck('product_id')
+                ->toArray();
+        }
+
+        return view('products', compact('products', 'categories','wishlistIds'));
     }
 
     public function getProductDetails($id)

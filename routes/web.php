@@ -10,7 +10,7 @@ use App\Http\Controllers\Admin\TenderController;
 use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ApplicationController;
-use App\Http\Controllers\BrochureController;
+use App\Http\Controllers\Admin\BrochureController;
 use App\Http\Controllers\CustomerAuthController;
 use App\Http\Controllers\CustomerController;
 use Illuminate\Support\Facades\Artisan;
@@ -103,7 +103,11 @@ Route::middleware(['auth'])->group(function () {
 
 
     Route::get('/brochure-index', [BrochureController::class, 'index'])->name('brochure.index');
-    Route::get('/brochure/view/{id}', [BrochureController::class, 'view'])->name('brochure.view');
+    Route::get('/brochure-view/{id}', [BrochureController::class, 'view'])->name('brochure.view');
+    Route::get('/brochure-upload', [BrochureController::class, 'upload'])->name('brochure.upload');
+    Route::post('/brochure-upload/store', [BrochureController::class, 'uploadFile'])->name('brochure.upload-store');
+    Route::get('/brochure-status/{id}', [BrochureController::class, 'changeStatus'])->name('brochure.status');
+
 
     // grievance-details
     Route::get('/grievance', [GrievanceController::class, 'index'])->name('grievance-details');

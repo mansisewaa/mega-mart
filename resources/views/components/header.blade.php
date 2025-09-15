@@ -40,38 +40,44 @@ $menus = App\Models\Menu::where('status',1)->get();
                         <a class="nav-link active" aria-current="page" href="/">HOME</a>
                     </li>
                     @foreach ($menus as $menu)
-                    @if($menu->sublink != 1)
-                    @if($menu->slug == 'products')
-                    <a class="nav-link active" href="{{route('products')}}" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="text-transform:uppercase;margin-left:.3rem;">
-                        PRODUCTS
-                    </a>
+                        @if($menu->sublink != 1)
+                                @if($menu->slug == 'products')
+                                <a class="nav-link active" href="{{route('products')}}" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="text-transform:uppercase;margin-left:.3rem;">
+                                {{$menu->name}}
+                                </a>
+                                @endif
 
-                    @else
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="{{route('page',$menu->slug)}}" style="text-transform:uppercase;margin-left:.3rem;">{{$menu->name}}</a>
-                    </li>
-                    @endif
-                    @else
-                    <li class="nav-item dropdown">
+                                @if($menu->slug == 'catalogue')
+                                    <a class="nav-link active" href="{{route('brochure')}}" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="text-transform:uppercase;margin-left:.3rem;">
+                                    {{$menu->name}}11
+                                </a>
+                                @endif
+                            @else
+                            <li class="nav-item">
+                                <a class="nav-link active" aria-current="page" href="{{route('page',$menu->slug)}}" style="text-transform:uppercase;margin-left:.3rem;">{{$menu->name}}</a>
+                            </li>
+                            @endif
+                        @else
+                        <li class="nav-item dropdown">
 
-                        <a class="nav-link active dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="text-transform:uppercase;margin-left:.3rem;">
-                            {{$menu->name}}
-                        </a>
+                            <a class="nav-link active dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="text-transform:uppercase;margin-left:.3rem;">
+                                {{$menu->name}}
+                            </a>
 
 
 
 
-                        <!-- @php
-                            $submenus = App\Models\SubMenu::where('menu_id', $menu->id)->get();
-                            @endphp
-                            <ul class="dropdown-menu" style="background-color:#4e93e4;">
-                                @foreach ($submenus as $submenu)
-                                <li><a class="dropdown-item" href="{{route('submenu', [$menu->slug, $submenu->slug])}}" style="color:white;">{{$submenu->name}}</a></li>
-                                @endforeach
-                            </ul>
-                        </li> -->
-                        @endif
-                        @endforeach
+                            <!-- @php
+                                $submenus = App\Models\SubMenu::where('menu_id', $menu->id)->get();
+                                @endphp
+                                <ul class="dropdown-menu" style="background-color:#4e93e4;">
+                                    @foreach ($submenus as $submenu)
+                                    <li><a class="dropdown-item" href="{{route('submenu', [$menu->slug, $submenu->slug])}}" style="color:white;">{{$submenu->name}}</a></li>
+                                    @endforeach
+                                </ul>
+                            </li> -->
+                            @endif
+                    @endforeach
                 </ul>
                 <a href="/contact_us" class="btn custom-btn1" style="font-size:14px; color:black;">CONTACT US</a>
             </div>

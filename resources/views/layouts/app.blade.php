@@ -82,18 +82,17 @@
                     <a href="{{route('index')}}">HOME</a>
                 </li>
                 @foreach($menus as $menu)
-                @if($menu->slug == 'products')
-                <li>
-                    <a href="{{route('products')}}">Products</a>
-                </li>
-                @else
-                <li>
-                    <a href="">{{ strtoupper($menu->name) }}</a>
-                </li>
-                @endif
+                    @if($menu->slug == 'products')
+                        <li>
+                            <a href="{{route('products')}}">Products</a>
+                        </li>
+                    @else
+                        <li>
+                            <a href="">{{ strtoupper($menu->name) }}</a>
+                        </li>
+                    @endif
                 @endforeach
 
-                <!-- Always add Contact Us at the end -->
                 <li>
                     <a href="{{route('contact-us')}}">CONTACT US</a>
                 </li>

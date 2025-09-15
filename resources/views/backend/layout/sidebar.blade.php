@@ -83,6 +83,11 @@
                                     <span class="sub-item">Manage</span>
                                 </a>
                             </li>
+                            <li>
+                                <a href="{{route('brochure.upload')}}">
+                                    <span class="sub-item">Upload Brochure</span>
+                                </a>
+                            </li>
 
                         </ul>
                     </div>

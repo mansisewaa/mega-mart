@@ -40,7 +40,7 @@
                             </div>
                             <div class="card-body">
                                 <div class="table-responsive">
-                                    <table class="table table-bordered table-striped" style="text-align: center;">
+                                    <table class="table table-bordered table-hover text-center">
                                         <thead>
                                             <tr>
                                                 <th>SL No</th>

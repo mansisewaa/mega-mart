@@ -61,7 +61,14 @@
     .product-title {
         font-weight: 600;
         color: #343a40;
-        font-size: 2.5rem;
+        font-size: 24px !important;
+        text-align: start !important;
+    }
+    .product-title:hover {
+        font-weight: 600;
+        color: #343a40 !important;
+        font-size: 24px !important;
+        text-align: start !important;
     }
 
     .star-rating .fa-star {
@@ -85,7 +92,7 @@
     .product-description p {
         color: #6c757d;
         margin-top: 1.5rem;
-        font-family: 'DM Sans', sans-serif;
+        font-family: 'Outfit', sans-serif;
         font-weight: 400;
         font-size: 16px !important;
         line-height: 26px;
@@ -150,7 +157,7 @@
         border: none;
         padding: 0.8rem 2rem;
         border-radius: 30px;
-        /* transition: background-color 0.3s ease; */
+        transition: background-color 0.3s ease;
         font-family: 'DM Sans', sans-serif;
         font-weight: 700;
         font-style: Bold;
@@ -174,15 +181,17 @@
     .product-info {
         margin-top: 0.8rem;
         font-family: 'DM Sans', sans-serif;
-        font-size: 14px;
+        font-size: 15px !important;
         font-weight: 500;
         color: #6c757d;
         letter-spacing: 0.3px;
+        text-align: start !important;
+        padding: 2px !important;
     }
 
     .product-info .separator {
         margin: 0 8px;
-        color: #aaa;
+         color: #3C66CF;
     }
 
     .product-info .product-category {
@@ -192,7 +201,8 @@
     }
 
     .product-info .product-code {
-        color: #555;
+        color: #3C66CF;
+         font-weight: 600;
     }
 
     /* Responsive adjustments */
@@ -271,8 +281,8 @@
                 <span class="product-code">Code: {{$product->product_code ?? 'N/A'}}</span>
             </div>
             <p class="price-range">
-                ${{$product->product_discount_price}} -
-                <span class="original-price">${{$product->product_original_price}}</span>
+                {{formatRupees($product->product_discount_price)}} -
+                <span class="original-price">{{formatRupees($product->product_original_price)}}</span>
             </p>
 
             <div class="product-description">

@@ -121,14 +121,13 @@
                 </div>
             </div>
 
-            <!-- Timeline -->
             @php
-            $progressWidth = match($order->status) {
-            'pending' => '20%',
-            'processing' => '44%',
-            'shipped' => '69%',
-            'delivered' => '100%',
-            default => '0%'
+                $progressWidth = match($order->status) {
+                'pending' => '20%',
+                'processing' => '44%',
+                'shipped' => '69%',
+                'delivered' => '100%',
+                'default' => '0%'
             };
             @endphp
 

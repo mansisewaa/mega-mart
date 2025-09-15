@@ -70,8 +70,10 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        justify-content: space-between; /* distribute content evenly */
-        height: 300px !important;        /* keep uniform height */
+        justify-content: space-between;
+        /* distribute content evenly */
+        height: 300px !important;
+        /* keep uniform height */
     }
 
     .product-card:hover {
@@ -138,6 +140,37 @@
         font-size: 18px;
         color: #777;
     }
+
+
+    .wishlist-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    z-index: 5;
+}
+
+.wishlist-btn i {
+    color: #777;
+    font-size: 16px;
+}
+
+.wishlist-btn.active i {
+    color: #e63946; /* red heart when active */
+}
+
+.wishlist-btn:hover {
+    background: #f5f5f5;
+}
 </style>
 
 @section('content')
@@ -159,7 +192,12 @@
         <div class="products" id="productList">
             @foreach($products as $product)
             <div class="product-card" data-category="{{ $product->category->id }}">
+                <button class="wishlist-btn {{ in_array($product->id, $wishlistIds) ? 'active' : '' }}"
+                    data-id="{{ $product->id }}">
+                    <i class="fa fa-heart"></i>
+                </button>
                 <a href="{{ route('product.view', $product->id) }}">
+
                     <img src="{{ asset('uploads/products/'. $product->product_image) }}"
                         alt="{{ $product->product_name }}">
                     <h4>{{ $product->product_name }}</h4>
@@ -175,6 +213,9 @@
     </div>
 </div>
 
+
+@endsection
+@section('js')
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     function filterProducts(category, el = null) {
@@ -214,5 +255,49 @@
         let activeLi = document.querySelector(`#categoryList li[onclick*="'${selectedCategory}'"]`);
         filterProducts(selectedCategory, activeLi);
     });
+</script>
+
+<script>
+
+
+$('.wishlist-btn').on('click', function(e) {
+    e.preventDefault();
+
+    var button = $(this);
+    var productId = button.data('id');
+
+    @if(!Auth::guard('customer')->check())
+        window.location.href = "{{ route('customer.login') }}";
+        return;
+    @endif
+
+    $.ajax({
+        url: "{{ url('customer/wishlist/add') }}/" + productId,
+        type: 'POST',
+        success: function(data) {
+            if (data.status === 'added') {
+                button.addClass('active');
+            } else {
+                button.removeClass('active');
+            }
+            updateHeaderCounts();
+        },
+        error: function(err) {
+            console.error(err);
+        }
+    });
+});
+
+ function updateHeaderCounts() {
+        $.ajax({
+            url: "{{ route('customer.counts') }}",
+            type: "GET",
+            success: function(counts) {
+                $('.cart-count').text(counts.cartCount);
+                $('.wishlist-count').text(counts.wishlistCount);
+            }
+        });
+    }
+
 </script>
 @endsection
