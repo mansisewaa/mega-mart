@@ -104,8 +104,8 @@
                                             @endif
                                         </td>
                                         <td>
-                                            <a href="{{route('category.edit',$category->id)}}" class="btn btn-sm btn-primary">Edit</a>
-                                            <a href="{{route('category.delete',$category->id)}}" class="btn btn-sm btn-danger" onclick= "return confirm('Are you sure ?');">Delete</a>
+                                            <a href="{{route('category.edit',$category->id)}}" class="btn btn-sm btn-primary"> <i class="fa fa-pen"></i> </a>
+                                            <a href="{{route('category.delete',$category->id)}}" class="btn btn-sm btn-danger" onclick= "return confirm('Are you sure ?');"><i class="fa fa-trash"></i></a>
                                         </td>
                                     </tr>
                                     @empty

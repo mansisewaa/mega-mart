@@ -143,34 +143,35 @@
 
 
     .wishlist-btn {
-    position: absolute;
-    top: 8px;
-    right: 8px;
-    background: #fff;
-    border: 1px solid #ddd;
-    border-radius: 50%;
-    width: 35px;
-    height: 35px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.2s ease-in-out;
-    z-index: 5;
-}
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        background: #fff;
+        border: 1px solid #ddd;
+        border-radius: 50%;
+        width: 35px;
+        height: 35px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s ease-in-out;
+        z-index: 5;
+    }
 
-.wishlist-btn i {
-    color: #777;
-    font-size: 16px;
-}
+    .wishlist-btn i {
+        color: #777;
+        font-size: 16px;
+    }
 
-.wishlist-btn.active i {
-    color: #e63946; /* red heart when active */
-}
+    .wishlist-btn.active i {
+        color: #e63946;
+        /* red heart when active */
+    }
 
-.wishlist-btn:hover {
-    background: #f5f5f5;
-}
+    .wishlist-btn:hover {
+        background: #f5f5f5;
+    }
 </style>
 
 @section('content')
@@ -181,7 +182,9 @@
         <div class="sidebar">
             <h3>Categories</h3>
             <ul id="categoryList">
-                <li class="active" onclick="filterProducts('all', this)">All</li>
+                <li class="{{ request('q') ? '' : 'active' }}">
+                    <a href="{{ route('products') }}" style="all: unset; cursor: pointer;">All</a>
+                </li>
                 @foreach($categories as $category)
                 <li onclick="filterProducts('{{ $category->id }}', this)">{{ $category->name }}</li>
                 @endforeach
@@ -258,37 +261,35 @@
 </script>
 
 <script>
+    $('.wishlist-btn').on('click', function(e) {
+        e.preventDefault();
 
+        var button = $(this);
+        var productId = button.data('id');
 
-$('.wishlist-btn').on('click', function(e) {
-    e.preventDefault();
-
-    var button = $(this);
-    var productId = button.data('id');
-
-    @if(!Auth::guard('customer')->check())
+        @if(!Auth::guard('customer') -> check())
         window.location.href = "{{ route('customer.login') }}";
         return;
-    @endif
+        @endif
 
-    $.ajax({
-        url: "{{ url('customer/wishlist/add') }}/" + productId,
-        type: 'POST',
-        success: function(data) {
-            if (data.status === 'added') {
-                button.addClass('active');
-            } else {
-                button.removeClass('active');
+        $.ajax({
+            url: "{{ url('customer/wishlist/add') }}/" + productId,
+            type: 'POST',
+            success: function(data) {
+                if (data.status === 'added') {
+                    button.addClass('active');
+                } else {
+                    button.removeClass('active');
+                }
+                updateHeaderCounts();
+            },
+            error: function(err) {
+                console.error(err);
             }
-            updateHeaderCounts();
-        },
-        error: function(err) {
-            console.error(err);
-        }
+        });
     });
-});
 
- function updateHeaderCounts() {
+    function updateHeaderCounts() {
         $.ajax({
             url: "{{ route('customer.counts') }}",
             type: "GET",
@@ -298,6 +299,5 @@ $('.wishlist-btn').on('click', function(e) {
             }
         });
     }
-
 </script>
 @endsection

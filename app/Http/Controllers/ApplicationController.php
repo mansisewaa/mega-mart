@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Banner;
+use App\Models\BrochureFile;
 use App\Models\BrochureRequest;
 use App\Models\Cart;
 use App\Models\Category;
@@ -24,7 +25,7 @@ class ApplicationController extends Controller
     {
         $banner     = Banner::where('status', 1)->get();
         $categories = Category::where('status', 1)->get();
-        $products   = Products::where('status', 1)->get();
+        $products   = Products::where('status', 1)->latest()->take(8)->get();
 
         $wishlistIds = [];
         if (Auth::guard('customer')->check()) {
@@ -37,7 +38,7 @@ class ApplicationController extends Controller
         $e_t = Category::where('slug', 'examination-tables')->first();
         $ward_furnitures = Products::where('category_id', $w_f->id)->where('status', 1)->get();
         $ex_tables = Products::where('category_id', $e_t->id)->where('status', 1)->get();
-        return view('index', compact('banner', 'categories', 'products', 'wishlistIds','ward_furnitures','ex_tables'));
+        return view('index', compact('banner', 'categories', 'products', 'wishlistIds', 'ward_furnitures', 'ex_tables'));
     }
     public function getBrochure()
     {
@@ -70,9 +71,9 @@ class ApplicationController extends Controller
         ]);
 
         BrochureRequest::create($validated);
-
-        session()->flash('success', 'Brochure downloaded successfully!');
-        session()->flash('brochure_url', asset('pdf/brochure.pdf'));
+        $brochureFile = BrochureFile::where('status', 1)->first();
+        session()->flash('success', 'Thank you! Your brochure is ready for download.');
+        session()->flash('brochure_url', asset('uploads/brochures/' . $brochureFile->file));
         return redirect()->back();
     }
 
@@ -95,20 +96,23 @@ class ApplicationController extends Controller
         }
     }
 
-    public function getProducts()
+    public function getProducts(Request $request)
     {
 
         $categories = Category::get();
-        $products  = Products::where('status', 1)->with('category')->get();
+        $query = $request->input('q');
 
-         $wishlistIds = [];
+        $products = Products::when($query, function ($q) use ($query) {
+            $q->where('product_name', 'like', "%{$query}%")
+                ->orWhere('product_description', 'like', "%{$query}%");
+        })->get();
+        $wishlistIds = [];
         if (Auth::guard('customer')->check()) {
             $wishlistIds = Wishlist::where('customer_id', Auth::guard('customer')->id())
                 ->pluck('product_id')
                 ->toArray();
         }
-
-        return view('products', compact('products', 'categories','wishlistIds'));
+        return view('products', compact('products', 'categories', 'wishlistIds'));
     }
 
     public function getProductDetails($id)
@@ -173,6 +177,12 @@ class ApplicationController extends Controller
         $categories = Category::all();
         $products = Products::where('category_id', $id)->get();
 
-        return view('products', compact('categories', 'products', 'id'));
+        $wishlistIds = [];
+        if (Auth::guard('customer')->check()) {
+            $wishlistIds = Wishlist::where('customer_id', Auth::guard('customer')->id())
+                ->pluck('product_id')
+                ->toArray();
+        }
+        return view('products', compact('categories', 'products', 'id','wishlistIds'));
     }
 }

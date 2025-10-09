@@ -127,7 +127,7 @@
                 'processing' => '44%',
                 'shipped' => '69%',
                 'delivered' => '100%',
-                'default' => '0%'
+                default => '0%'
             };
             @endphp
 
@@ -153,10 +153,13 @@
             <!-- Order Details Button -->
             <div style="margin-top:15px; text-align:right;">
                 <a href="{{ route('customer.orders.details', $order->id) }}"
-                    class="btn btn-primary"
-                    style="padding:6px 12px; border-radius:8px; background:#1a57ff; color:#fff; text-decoration:none;">
-                    View Details
+                    class="btn btn-sm btn-outline-primary mt-2">
+                    <i class="bi bi-eye"></i> Details
                 </a>
+                 <a href="{{ route('customer.invoice.download', $order->orderNo)}}"
+                       class="btn btn-sm btn-outline-primary mt-2">
+                        <i class="bi bi-receipt"></i> Invoice
+                    </a>
             </div>
         </div>
         @empty

@@ -21,11 +21,11 @@
 </style>
 @section('content')
 <section class="hero-section hero-section-full-height">
-    <div class="container-fluid p-0">
+    <div class="container p-0">
         <div class="row g-0 align-items-center">
 
             <!-- Left content -->
-            <div class="col-lg-6 col-12 hero-left">
+            <div class="col-lg-4 col-12 hero-left">
                 <small class="hero-subtitle">100% PREMIUM PRODUCTS</small>
                 <h2 class="hero-title">Quality You Can Trust.<br>Equipment That <br>Cares.</h2>
                 <p class="hero-offer">Get <span>25%</span> Off, Hurry Up!</p>
@@ -33,11 +33,13 @@
             </div>
 
             <!-- Right image with vertical scroll -->
-            <div class="col-lg-6 col-12 hero-right">
+            <div class="col-lg-8 col-12 hero-right">
                 <div class="scrolling-image-container">
-                    <img src="{{asset('img/product1.png')}}" alt="Product 1" class="scroll-img active">
-                    <img src="{{asset('img/product2.png')}}" alt="Product 2" class="scroll-img">
-                    <img src="{{asset('img/product3.png')}}" alt="Product 3" class="scroll-img">
+                    <div class="scrolling-images">
+                        <img src="{{asset('img/scrolling-img 1.png')}}" alt="Product 1" class="scroll-img">
+                        <img src="{{asset('img/scrolling-img 2.png')}}" alt="Product 2" class="scroll-img">
+                        <img src="{{asset('img/scrolling-img 3.png')}}" alt="Product 3" class="scroll-img">
+                    </div>
                 </div>
             </div>
 
@@ -51,19 +53,19 @@
 
             <!-- Card 1 -->
             <div class="col-md-4 col-sm-6">
-                <div class="product-card" style="background-color: #E6F1FF;">
+                <div class="product-card card-1">
                     <div class="card-content">
                         <div class="card-text">
                             <span class="discount-text">GET UP TO 26%</span>
                             <h3 class="product-title">ICU Bed - Electric</h3>
                             <p class="product-price">
-                                <span class="current">$80.00</span>
-                                <span class="old">$120.00</span>
+                                <span class="current">{{formatRupees('80.00')}}</span>
+                                <span class="old">{{formatRupees('120.00')}}</span>
                             </p>
                             <a href="#" class="shop-btn">SHOP NOW</a>
                         </div>
                         <div class="card-image">
-                            <img src="img/product1.png" alt="ICU Bed" class="product-img">
+                            <img src="{{asset('img/card1.png')}}" alt="ICU Bed" class="product-img">
                         </div>
                     </div>
                 </div>
@@ -71,19 +73,19 @@
 
             <!-- Card 2 -->
             <div class="col-md-4 col-sm-6">
-                <div class="product-card" style="background-color: #EAE9FF;">
+                <div class="product-card card-2">
                     <div class="card-content">
                         <div class="card-text">
                             <span class="discount-text">GET UP TO 26%</span>
                             <h3 class="product-title">Patient Transfer <br>Trolleys</h3>
                             <p class="product-price">
-                                <span class="current">$80.00</span>
-                                <span class="old">$120.00</span>
+                                <span class="current">{{formatRupees('80.00')}}</span>
+                                <span class="old">{{formatRupees('120.00')}}</span>
                             </p>
                             <a href="#" class="shop-btn">SHOP NOW</a>
                         </div>
                         <div class="card-image">
-                            <img src="img/product2.png" alt="Trolley" class="product-img">
+                            <img src="{{asset('img/card2.png')}}" alt="Trolley" class="product-img">
                         </div>
                     </div>
                 </div>
@@ -91,19 +93,19 @@
 
             <!-- Card 3 -->
             <div class="col-md-4 col-sm-6">
-                <div class="product-card" style="background-color: #E5F9F1;">
+                <div class="product-card card-3">
                     <div class="card-content">
                         <div class="card-text">
                             <span class="discount-text">GET UP TO 26%</span>
                             <h3 class="product-title">Over Bed / Cardiac Tables</h3>
                             <p class="product-price">
-                                <span class="current">$80.00</span>
-                                <span class="old">$120.00</span>
+                                <span class="current">{{formatRupees('80.00')}}</span>
+                                <span class="old">{{formatRupees('120.00')}}</span>
                             </p>
                             <a href="#" class="shop-btn">SHOP NOW</a>
                         </div>
                         <div class="card-image">
-                            <img src="img/product3.png" alt="Cardiac Table" class="product-img">
+                            <img src="{{asset('img/card3.png')}}" alt="Cardiac Table" class="product-img">
                         </div>
                     </div>
                 </div>
@@ -161,23 +163,37 @@
             <div class="customer-product-grid">
                 @foreach($products as $product)
                 <div class="custom-product-card" data-id="{{ $product->id }}">
-                    <div class="custom-product-actions">
-                        <button class="custom-icon-btn wishlist-btn {{ in_array($product->id, $wishlistIds) ? 'active' : '' }}"
-                            data-id="{{ $product->id }}">
-                            <i class="fa fa-heart"></i>
-                        </button>
-                        <a href="{{route('product.view',$product->id)}}" class="custom-icon-btn" style="text-decoration:none;">
-                            <i class="fa fa-eye" aria-hidden="true"></i>
-                        </a>
+                    <!-- 🔹 Top Section -->
+                    <div class="custom-product-top">
+                        <span class="custom-sale-badge">Sale!</span>
+
+                        <div class="custom-product-actions">
+                            <button class="custom-icon-btn wishlist-btn {{ in_array($product->id, $wishlistIds) ? 'active' : '' }}"
+                                data-id="{{ $product->id }}">
+                                <i class="fa fa-heart"></i>
+                            </button>
+                            <a href="{{route('product.view',$product->id)}}" class="custom-icon-btn" style="text-decoration:none;">
+                                <i class="fa fa-eye" aria-hidden="true"></i>
+                            </a>
+                        </div>
+
+                        <div class="custom-product-img-wrapper">
+                            <img src="{{ asset('uploads/products/' . $product->product_image)}}" alt="Product" class="custom-product-img">
+                        </div>
                     </div>
-                    <img src="{{ asset('uploads/products/' . $product->product_image)}}" alt="Product" class="custom-product-img">
-                    <p class="custom-product-category">{{$product->category->name}}</p>
-                    <h3 class="custom-product-name">{{$product->product_name}}</h3>
-                    <div class="custom-product-price">
-                        <span class="custom-new-price">{{formatRupees($product->product_discount_price)}}</span>
-                        <span class="custom-old-price">{{formatRupees($product->product_original_price)}}</span>
+
+                    <!-- 🔹 Bottom Section -->
+                    <div class="custom-product-info">
+                        <p class="custom-product-category">{{$product->category->name}}</p>
+                        <h3 class="custom-product-name">{{$product->product_name}}</h3>
+                        <div class="custom-product-price">
+                            <span class="custom-new-price">{{formatRupees($product->product_discount_price)}}</span>
+                            <span class="custom-old-price">{{formatRupees($product->product_original_price)}}</span>
+                        </div>
                     </div>
                 </div>
+
+
                 @endforeach
             </div>
 
@@ -196,25 +212,25 @@
                 <div class="vhpl-features">
                     <div class="vhpl-feature">
                         <div class="vhpl-icon">
-                            <img src="img/shipping.png" alt="Shipping Icon">
+                            <img src="{{asset('img/shipping.png')}}" alt="Shipping Icon">
                         </div>
                         <span class="vhpl-subtitle">Quick nationwide shipping</span>
                     </div>
                     <div class="vhpl-feature">
                         <div class="vhpl-icon">
-                            <img src="img/support.png" alt="Support Icon">
+                            <img src="{{asset('img/support.png')}}" alt="Support Icon">
                         </div>
                         <span class="vhpl-subtitle">24/7 support</span>
                     </div>
                     <div class="vhpl-feature">
                         <div class="vhpl-icon">
-                            <img src="img/finder.png" alt="Product Finder Icon">
+                            <img src="{{asset('img/finder.png')}}" alt="Product Finder Icon">
                         </div>
                         <span class="vhpl-subtitle">Quick Product Finder</span>
                     </div>
                     <div class="vhpl-feature">
                         <div class="vhpl-icon">
-                            <img src="img/hospitals.png" alt="Trusted Icon">
+                            <img src="{{asset('img/hospitals.png')}}" alt="Trusted Icon">
                         </div>
                         <span class="vhpl-subtitle">Trusted by 100+ Hospitals</span>
                     </div>
@@ -223,7 +239,7 @@
 
             <!-- Right Image -->
             <div class="vhpl-image">
-                <img src="img/vhpl.png" alt="Hospital Bed">
+                <img src="{{asset('img/vhpl.png')}}" alt="Hospital Bed">
             </div>
         </div>
     </div>
@@ -238,26 +254,26 @@
 
         <div class="ward-furniture-grid py-5">
             @forelse($ward_furnitures as $furniture)
-             @if($loop->first) @continue @endif
-                <div class="ward-furniture-card">
-                     @if($product->product_discount_price < $product->product_original_price)
+            @if($loop->first) @continue @endif
+            <div class="ward-furniture-card">
+                @if($product->product_discount_price < $product->product_original_price)
                     <div class="ward-furniture-badge">Sale!</div>
                     @endif
                     <img src="{{asset('uploads/products/'.$furniture->product_image)}}"
-                         alt="{{$furniture->product_name}}"
-                         class="ward-furniture-img">
+                        alt="{{$furniture->product_name}}"
+                        class="ward-furniture-img">
                     <h3 class="ward-furniture-name">{{$furniture->product_name}}</h3>
                     <p class="ward-furniture-price">
                         <span class="current">{{formatRupees($furniture->product_discount_price)}}</span> -
                         <span class="old">{{formatRupees($furniture->product_original_price)}}</span>
                     </p>
-                </div>
+            </div>
             @empty
-                <p>No products available</p>
+            <p>No products available</p>
             @endforelse
 
             @if($ward_furnitures->isNotEmpty())
-             @php $promoProduct = $ex_tables->first(); @endphp
+            @php $promoProduct = $ex_tables->first(); @endphp
             <div class="ward-furniture-promo">
                 <p class="ward-furniture-promo-title">EXTRA 9% SAVING ON ORDER</p>
 
@@ -268,8 +284,8 @@
                 </p>
                 <a href="{{ route('product.view', $promoProduct->id) }}" class="ward-furniture-shop-btn">SHOP NOW</a>
                 <img src="{{ asset('uploads/products/' . $promoProduct->product_image) }}"
-                     alt="{{$promoProduct->product_name}}"
-                     class="ward-furniture-img">
+                    alt="{{$promoProduct->product_name}}"
+                    class="ward-furniture-img">
             </div>
             @endif
         </div>
@@ -283,47 +299,47 @@
         <div class="examination-tables-header">
             <h2 class="examination-tables-title">EXAMINATION TABLES</h2>
             <a href="{{ route('products.byCategory','5') }}"
-               class="examination-tables-view-all"
-               style="position: relative; z-index: 10;">
-               VIEW ALL PRODUCTS
+                class="examination-tables-view-all"
+                style="position: relative; z-index: 10;">
+                VIEW ALL PRODUCTS
             </a>
         </div>
 
         <div class="examination-tables-grid py-5">
             @if($ex_tables->isNotEmpty())
-                @php $promoProduct = $ex_tables->first(); @endphp
-                <div class="examination-tables-promo">
-                    <p class="examination-tables-promo-title">EXTRA 9% SAVING ON ORDER</p>
-                    <p class="examination-tables-price">
-                        <span class="current">{{ formatRupees($promoProduct->product_discount_price) }}</span> –
-                        <span class="old">{{ formatRupees($promoProduct->product_original_price) }}</span>
-                    </p>
-                    <a href="{{ route('product.view', $promoProduct->id) }}" class="examination-tables-shop-btn">SHOP NOW</a>
-                    <img src="{{ asset('uploads/products/'.$promoProduct->product_image) }}"
-                         alt="{{ $promoProduct->product_name }}"
-                         class="examination-tables-img">
-                </div>
+            @php $promoProduct = $ex_tables->first(); @endphp
+            <div class="examination-tables-promo">
+                <p class="examination-tables-promo-title">EXTRA 9% SAVING ON ORDER</p>
+                <p class="examination-tables-price">
+                    <span class="current">{{ formatRupees($promoProduct->product_discount_price) }}</span> –
+                    <span class="old">{{ formatRupees($promoProduct->product_original_price) }}</span>
+                </p>
+                <a href="{{ route('product.view', $promoProduct->id) }}" class="examination-tables-shop-btn">SHOP NOW</a>
+                <img src="{{ asset('uploads/products/'.$promoProduct->product_image) }}"
+                    alt="{{ $promoProduct->product_name }}"
+                    class="examination-tables-img">
+            </div>
             @endif
 
 
             @foreach($ex_tables as $product)
-                @if($loop->first) @continue @endif
-                <div class="examination-tables-card">
-                    @if($product->product_discount_price < $product->product_original_price)
-                        <div class="examination-tables-badge">Sale!</div>
+            @if($loop->first) @continue @endif
+            <div class="examination-tables-card">
+                @if($product->product_discount_price < $product->product_original_price)
+                    <div class="examination-tables-badge">Sale!</div>
                     @endif
                     <img src="{{ asset('uploads/products/'.$product->product_image) }}"
-                         alt="{{ $product->product_name }}"
-                         class="examination-tables-img">
+                        alt="{{ $product->product_name }}"
+                        class="examination-tables-img">
                     <!-- <p class="examination-tables-category">{{ $product->category->name ?? 'Tables' }}</p> -->
                     <h3 class="examination-tables-name">{{ $product->product_name }}</h3>
                     <p class="examination-tables-price">
                         <span class="current">{{ formatRupees($product->product_discount_price) }}</span>
                         @if($product->product_discount_price < $product->product_original_price)
                             - <span class="old">{{ formatRupees($product->product_original_price) }}</span>
-                        @endif
+                            @endif
                     </p>
-                </div>
+            </div>
             @endforeach
         </div>
     </div>
@@ -336,7 +352,7 @@
 
         <div class="slider-wrapper py-5">
             <div class="slider" id="slider">
-                <div class="card">
+                <div class="testimonials-card">
                     <div class="stars">★★★★★</div>
                     <p>Lorem ipsum dolor sit amet consectetur. Ultricies ipsum nullam integer orci tellus praesent. Dolor volutpat quis fringilla in pretium est.</p>
                     <div class="profile">
@@ -348,7 +364,7 @@
                     </div>
                     <div class="quote">❝</div>
                 </div>
-                <div class="card">
+                <div class="testimonials-card">
                     <div class="stars">★★★★★</div>
                     <p>Lorem ipsum dolor sit amet consectetur. In sed nunc adipiscing hendrerit sed. Orci arcu nunc ullamcorper mi mattis.</p>
                     <div class="profile">
@@ -360,7 +376,7 @@
                     </div>
                     <div class="quote">❝</div>
                 </div>
-                <div class="card">
+                <div class="testimonials-card">
                     <div class="stars">★★★★★</div>
                     <p>More customer feedback goes here with exactly same style as Figma.</p>
                     <div class="profile">
@@ -372,7 +388,7 @@
                     </div>
                     <div class="quote">❝</div>
                 </div>
-                <div class="card">
+                <div class="testimonials-card">
                     <div class="stars">★★★★★</div>
                     <p>Another testimonial in same style.</p>
                     <div class="profile">
@@ -394,25 +410,50 @@
 
 @section('js')
 <script>
-    let images = document.querySelectorAll('.scroll-img');
+    document.addEventListener("DOMContentLoaded", function () {
+    const images = document.querySelectorAll(".scrolling-image-container .scroll-img");
     let index = 0;
+    const duration = 3000; // total time per image (3s)
 
-    function showNextImage() {
-        let current = images[index];
-        current.classList.remove('active');
-        current.classList.add('exit');
+    function animateImage(img, callback) {
+        // reset to start position (above container)
+        img.style.transition = "none";
+        img.style.top = "-100%";
+        img.style.opacity = "0";
+        img.style.transform = "translateX(-50%) scale(1)";
 
-        index = (index + 1) % images.length;
-        let next = images[index];
+        // force browser to apply reset
+        requestAnimationFrame(() => {
+            // enter to center
+            img.style.transition = "top 1s ease, transform 1s ease, opacity 0.5s ease";
+            img.style.top = "50%";
+            img.style.transform = "translate(-50%, -50%) scale(1.7)";
+            img.style.opacity = "1";
 
-        setTimeout(() => {
-            current.classList.remove('exit');
-            current.style.top = '-100%'; // reset to top for next cycle
-            next.classList.add('active');
-        }, 1000);
+            // after pause, exit down
+            setTimeout(() => {
+                img.style.transition = "top 1s ease, opacity 0.5s ease, transform 1s ease";
+                img.style.top = "120%";
+                img.style.opacity = "0";
+                img.style.transform = "translateX(-50%) scale(1)";
+
+                // when exit is done → callback
+                setTimeout(callback, 1000);
+            }, 2000); // stay in center 1.5s
+        });
     }
 
-    setInterval(showNextImage, 3000); // 3 seconds per image
+    function showNextImage() {
+        const current = images[index];
+        animateImage(current, () => {
+            index = (index + 1) % images.length;
+            showNextImage();
+        });
+    }
+
+    // start loop
+    showNextImage();
+});
 </script>
 
 <script>

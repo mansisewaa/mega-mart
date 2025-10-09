@@ -77,7 +77,7 @@ class CustomerAuthController extends Controller
             if (Auth::guard('customer')->attempt($credentials)) {
                 $request->session()->regenerate();
 
-                return redirect()->intended(route('index'))
+                return redirect()->intended(route('products'))
                     ->with('success', 'Welcome back, ' . Auth::guard('customer')->user()->name . '!');
             }
             return back()->withErrors([

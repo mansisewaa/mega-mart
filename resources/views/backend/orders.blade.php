@@ -117,7 +117,7 @@
                                         </td>
                                          <td>{{ date('d-m-Y', strtotime($order->expected_delivery_date)) ?? ''}}</td>
                                         <td>
-                                            <a href=""
+                                            <a href="{{route('order-details',$order->id)}}"
                                                 class="btn btn-sm btn-primary">
                                                 <i class="fa fa-eye"></i>
                                             </a>

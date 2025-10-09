@@ -1,107 +1,155 @@
 @extends('layouts.app')
-<!-- SweetAlert CSS and JavaScript -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.9/dist/sweetalert2.min.css">
+<style>
+    .brochure-section {
+        padding: 40px 0;
+        background: #f9fafc;
+        font-family: 'Outfit', sans-serif;
+    }
+
+    .brochure-container {
+        display: flex;
+        justify-content: space-between;
+        max-width: 1100px;
+        margin: auto;
+        gap: 20px;
+    }
+
+    .brochure-info {
+        flex: 1;
+        background: #f3f6fb;
+        padding: 25px;
+        border-radius: 10px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    }
+
+    .brochure-info h2 {
+        margin-bottom: 15px;
+        font-size: 22px;
+        font-weight: bold;
+    }
+
+    .brochure-info p {
+        margin: 8px 0;
+        font-size: 14px;
+        color: #333;
+    }
+
+    .brochure-info i {
+        margin-right: 6px;
+        color: #e40001;
+    }
+
+    .brochure-form-wrapper {
+        flex: 1.4; /* smaller than before */
+        background: #f3f6fb;
+        padding: 22px;
+        border-radius: 10px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    }
+
+    .brochureform label {
+        display: block;
+        margin: 6px 0 4px;
+        font-size: 14px;
+        font-weight: 500;
+    }
+
+    .brochureform input,
+    .brochureform textarea {
+        width: 100%;
+        padding: 8px 10px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        margin-bottom: 12px;
+        font-size: 13px;
+    }
+
+    .brochureform textarea {
+        resize: vertical;
+        min-height: 80px;
+    }
+
+    .brochureform button {
+        display: block;
+        width: 100%;
+        background: linear-gradient(to right, #e40001, #ff5557);
+        border: none;
+        padding: 10px;
+        color: #fff;
+        font-size: 14px;
+        border-radius: 20px;
+        cursor: pointer;
+        font-weight: 600;
+    }
+
+    .brochureform button:hover {
+        background: linear-gradient(to right, #c20001, #e13b3d);
+    }
+
+    /* Mobile responsive */
+    @media (max-width: 768px) {
+        .brochure-container {
+            flex-direction: column;
+        }
+    }
+</style>
 
 @section('content')
-<section class="donate-section">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-6 col-12 mx-auto">
-                <form class="custom-form donate-form" action="{{route('downloadBrochure')}}" method="post" role="form">
-                    @csrf
+<section class="brochure-section">
+    <div class="brochure-container">
 
-                    <h4 class="mb-4" style="text-align: center;">Download Brochure</h4>
+        <!-- Left Info -->
+        <div class="brochure-info">
+            <h2>Download Our Brochure</h2>
+            <p><i class="fas fa-file-pdf"></i> Get a detailed brochure with all our products and services.</p>
+            <p><i class="fas fa-check-circle"></i> Learn about features, specifications, and pricing.</p>
+            <p><i class="fas fa-envelope-open-text"></i> Fill the form and receive your brochure instantly.</p>
+        </div>
 
-                    <div class="row">
-                        <div class="col-lg-6 col-12 my-2">
-                            <label for="name" class="form-label">Name*</label>
-                            <input type="text" name="name" id="name"
-                                placeholder="Enter your full name"
-                                class="form-control form-control-sm @error('name') is-invalid @enderror" required>
-                            @error('name')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
+        <!-- Right Form -->
+        <div class="brochure-form-wrapper">
+            <form class="brochureform" action="{{ route('downloadBrochure') }}" method="POST">
+                @csrf
 
-                        <div class="col-lg-6 col-12 my-2">
-                            <label for="phone" class="form-label">Phone*</label>
-                            <input type="text" name="phone" id="phone"
-                                placeholder="e.g., 1234567890"
-                                class="form-control form-control-sm @error('phone') is-invalid @enderror"
-                                oninput="this.value = this.value.replace(/[^0-9]/g, '')" maxlength="10" required>
-                            @error('phone')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
+                <label>Name *</label>
+                <input type="text" name="name" placeholder="Enter your full name" required>
 
-                        <div class="col-lg-6 col-12 my-2">
-                            <label for="email" class="form-label">Email*</label>
-                            <input type="email" name="email" id="email"
-                                placeholder="name@example.com"
-                                class="form-control form-control-sm @error('email') is-invalid @enderror" required>
-                            @error('email')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
+                <label>Phone *</label>
+                <input type="text" name="phone" placeholder="Enter your phone number" maxlength="10" oninput="this.value=this.value.replace(/[^0-9]/g,'')" required>
 
-                        <div class="col-lg-6 col-12 my-2">
-                            <label for="company_name" class="form-label">Company Name <small>(Optional)</small></label>
-                            <input type="text" name="company_name" id="company_name"
-                                placeholder="Your company name"
-                                class="form-control form-control-sm @error('company_name') is-invalid @enderror">
-                            @error('company_name')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
+                <label>Email *</label>
+                <input type="email" name="email" placeholder="Enter your email" required>
 
-                        <div class="col-lg-12 col-12 my-2">
-                            <label for="message" class="form-label">Message</label>
-                            <textarea name="message" id="message"
-                                placeholder="Any specific requirements or message"
-                                cols="30" rows="5"
-                                class="form-control form-control-sm @error('message') is-invalid @enderror"></textarea>
-                            @error('message')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
+                <label>Company</label>
+                <input type="text" name="company_name" placeholder="Enter your company name">
 
-                        <div class="col-lg-12 col-12 my-2">
-                            <button type="submit" class="form-control btn btn-sm" style="background-color:#e40001;">
-                                <i class="fas fa-download"></i> Download Brochure
-                            </button>
-                        </div>
-                    </div>
+                <label>Message</label>
+                <textarea name="message" placeholder="Any specific requirements or message"></textarea>
 
-                </form>
-            </div>
-
+                <button type="submit"><i class="fas fa-download"></i> Download Brochure</button>
+            </form>
         </div>
     </div>
 </section>
 @endsection
 
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.9/dist/sweetalert2.min.js"></script>
+@section('js')
 @if(session('success'))
 <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            Swal.fire({
-                title: 'Success!',
-                text: "{{ session('success') }}",
-                icon: 'success',
-                confirmButtonText: 'OK'
-            });
-        });
-    </script>
+    Swal.fire({
+        icon: 'success',
+        title: 'Success',
+        text: "{{ session('success') }}",
+        confirmButtonText: 'OK'
+    });
+</script>
 @endif
-
 
 @if(session('brochure_url'))
 <script>
-
     window.addEventListener('DOMContentLoaded', function() {
         const brochureUrl = "{{ session('brochure_url') }}";
         if (brochureUrl) {
-            // Create a temporary link element and trigger click to download
             const link = document.createElement('a');
             link.href = brochureUrl;
             link.download = 'brochure.pdf';
@@ -112,3 +160,4 @@
     });
 </script>
 @endif
+@endsection

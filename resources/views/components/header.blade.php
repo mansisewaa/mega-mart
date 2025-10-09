@@ -64,18 +64,6 @@ $menus = App\Models\Menu::where('status',1)->get();
                                 {{$menu->name}}
                             </a>
 
-
-
-
-                            <!-- @php
-                                $submenus = App\Models\SubMenu::where('menu_id', $menu->id)->get();
-                                @endphp
-                                <ul class="dropdown-menu" style="background-color:#4e93e4;">
-                                    @foreach ($submenus as $submenu)
-                                    <li><a class="dropdown-item" href="{{route('submenu', [$menu->slug, $submenu->slug])}}" style="color:white;">{{$submenu->name}}</a></li>
-                                    @endforeach
-                                </ul>
-                            </li> -->
                             @endif
                     @endforeach
                 </ul>

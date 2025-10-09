@@ -239,4 +239,16 @@ class CustomerController extends Controller
         ]);
     }
 
+    public function invoice($orderNo){
+        // dd($orderNo);
+        $order = Order::with(['items.product', 'customer'])->where('orderNo',$orderNo)->first();
+        // dd($order);
+        if (!$order) {
+            return redirect()->back()->with('error', 'Order not found');
+        }else{
+            return view('orders.invoice-view', compact('order'));
+        }
+
+    }
+
 }

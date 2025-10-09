@@ -393,6 +393,12 @@ class AdminController extends Controller
         return  view('backend.orders', compact('orders'));
     }
 
+    public function getOrdersDetails($id)
+    {
+        $order = Order::with('items.product')->where('id', $id)->first();
+        return view('backend.order-details', compact('order'));
+    }
+
     public function updateOrderStatus(Request $request,$id)
     {
         try {
@@ -407,6 +413,12 @@ class AdminController extends Controller
             //throw $th;
             return redirect()->back()->with('error', 'Something went wrong: ' . $th->getMessage());
         }
+    }
+
+    public function invoice($id)
+    {
+        $order = Order::with(['items.product', 'customer'])->where('orderNo',$id)->first();
+        return view('orders.invoice-view', compact('order'));
     }
 
 

@@ -115,7 +115,8 @@ class CategoryController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $category = Category::where('id', $id)->first();
+        return view('backend.category.edit',compact('category'));
     }
 
     /**
@@ -123,7 +124,75 @@ class CategoryController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+       $request->validate([
+            'name' => 'required',
+        ]);
+
+        try {
+            $category = Category::where('id', $id)->first();
+            $category->update([
+                'name' => $request->name,
+            ]);
+
+            if (!$request->hasFile('file')) {
+                return redirect()->back()->with('error', 'No file uploaded.');
+            } else {
+
+                $file = $request->file('file');
+
+                // Check if the file upload was successful
+                if (!$file->isValid()) {
+                    return redirect()->back()->with('error', 'File upload failed. Error Code: ' . $file->getError());
+                }
+
+                // Check for double dots in filename
+                if (substr_count($file->getClientOriginalName(), '.') > 1) {
+                    return redirect()->back()->with('error', 'Invalid file name: Double dot detected.');
+                }
+
+                // Get MIME type
+                $finfo = new \finfo(FILEINFO_MIME_TYPE);
+                $mime_type = $finfo->file($file->getPathname());
+
+                // Fix for application/octet-stream
+                if ($mime_type == "application/octet-stream") {
+                    $mime_type = $file->getMimeType();
+                }
+
+                // Allowed MIME types
+                $allowedMimeTypes = ["image/png", "image/jpeg", "application/octet-stream"];
+
+                if (!in_array($mime_type, $allowedMimeTypes)) {
+                    return redirect()->back()->with('error', 'Invalid file type: Only JPG and PNG are allowed.');
+                }
+
+                // Allowed extensions
+                $allowedExtensions = ["jpg", "jpeg", "png"];
+                $extension = strtolower($file->getClientOriginalExtension());
+
+                if (!in_array($extension, $allowedExtensions)) {
+                    return redirect()->back()->with('error', 'Invalid file extension.');
+                }
+
+                // Generate unique filename
+                $fileName = time() . '.' . $extension;
+
+                // Move file to storage
+                $file->move(public_path('uploads/categoryfiles'), $fileName);
+
+                // Get file URL
+                $file_path = asset('uploads/categoryfiles/'. $fileName);
+
+                $category->update([
+                    'file' => $fileName,
+                ]);
+            }
+
+            return redirect()->route('category')->with('success', 'Category is Updated successfully');
+        } catch (\Throwable $th) {
+            //throw $th;
+            return redirect()->back()->with('error', $th->getMessage());
+        }
     }
 
     /**

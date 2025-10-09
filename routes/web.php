@@ -141,7 +141,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/category/delete/{id}', [CategoryController::class, 'destroy'])->name('category.delete');
 
     Route::get('/orders', [AdminController::class, 'getOrders'])->name('get-orders');
+    Route::get('/orders/details/{id}', [AdminController::class, 'getOrdersDetails'])->name('order-details');
     Route::post('/update-order-status/{id}',[AdminController::class,'updateOrderStatus'])->name('update-order-status');
+    Route::get('/order-invoice/{id}', [AdminController::class, 'invoice'])->name('order-invoice');
 });
 
 Route::post('/logout', [AdminController::class, 'logout'])->name('logout');
@@ -183,6 +185,8 @@ Route::prefix('customer')->name('customer.')->group(function () {
     Route::get('/orders/{id}', [CustomerController::class, 'orderDetails'])->name('orders.details');
 
     Route::get('/customer/counts', [CustomerController::class, 'getCounts'])->name('counts');
+    Route::get('/invoice/{orderNo}', [CustomerController::class, 'invoice'])->name('invoice.download');
+
 
     // });
 });

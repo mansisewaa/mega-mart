@@ -26,7 +26,7 @@
     @yield('css')
 </head>
 
-<body id="section_1">
+<body>
     <header class="site-header">
         <div class="container">
             <div class="row align-items-center custom-product-grid">
@@ -38,8 +38,8 @@
 
                 <!-- Search -->
                 <div class="col-lg-5 col-md-5 col-12">
-                    <form class="header-search">
-                        <input type="text" placeholder="Search Here..." />
+                    <form class="header-search" action="{{ route('products') }}" method="GET">
+                        <input type="text" name="q" placeholder="Search Here..." value="{{ request('q') }}" />
                         <button type="submit"><i class="bi bi-search"></i></button>
                     </form>
                 </div>
@@ -82,15 +82,19 @@
                     <a href="{{route('index')}}">HOME</a>
                 </li>
                 @foreach($menus as $menu)
-                    @if($menu->slug == 'products')
-                        <li>
-                            <a href="{{route('products')}}">Products</a>
-                        </li>
-                    @else
-                        <li>
-                            <a href="">{{ strtoupper($menu->name) }}</a>
-                        </li>
-                    @endif
+                @if($menu->slug == 'products')
+                <li>
+                    <a href="{{route('products')}}">Products</a>
+                </li>
+                @elseif($menu->slug == 'catalogue')
+                <li class="nav-item">
+                    <a href="{{ route('brochure') }}">{{ $menu->name }}</a>
+                </li>
+                @else
+                <li>
+                    <a href="">{{ strtoupper($menu->name) }}</a>
+                </li>
+                @endif
                 @endforeach
 
                 <li>
