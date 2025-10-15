@@ -172,6 +172,24 @@
     .wishlist-btn:hover {
         background: #f5f5f5;
     }
+@media (max-width: 768px) {
+    .product-section {
+        flex-direction: column; /* stack vertically */
+    }
+
+    .sidebar {
+        width: 100%;          /* full width */
+        min-height: auto;     /* remove full height */
+        padding: 15px;        /* smaller padding */
+        margin-bottom: 10px;  /* space below sidebar */
+    }
+
+    .products {
+        width: 100%;
+        padding: 10px;
+    }
+}
+
 </style>
 
 @section('content')

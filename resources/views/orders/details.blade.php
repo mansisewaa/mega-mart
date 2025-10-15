@@ -1,26 +1,82 @@
 @extends('layouts.app')
 <style>
-    .orders-container {
-        max-width: 900px;
-        margin: auto;
-        background: #fff;
-        border-radius: 15px;
-        padding: 30px 60px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+   .orders-container {
+    max-width: 900px;
+    margin: auto;
+    background: #fff;
+    border-radius: 15px;
+    padding: 30px clamp(15px, 5vw, 60px); /* padding adjusts based on screen size */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.orders-container h2 {
+    margin-bottom: 20px;
+    /*text-align: center; /* Center heading on all devices */
+}
+
+.back-to-order {
+    padding: 5px 10px;
+    border-radius: 8px;
+    background: #3b8dff;
+    color: #fff;
+    text-decoration: none;
+    margin-left: 20px;
+}
+
+/* Order header responsive */
+.order-header {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    gap: 10px;
+}
+
+/* Shipping Address responsive */
+.address-box h4 {
+    margin-bottom: 5px;
+}
+
+/* Table responsiveness */
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+thead {
+    background: #f7f9fc;
+}
+
+th, td {
+    padding: 10px;
+    border: 1px solid #ddd;
+   /* text-align: center; */ 
+}
+
+/* Make table scrollable on small screens */
+@media (max-width: 468px) {
+    .order-header {
+        flex-direction: column;
+        align-items: flex-start;
     }
 
-    .orders-container h2 {
-        margin-bottom: 20px;
+    table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    table th, table td {
+        font-size: 14px;
+        padding: 8px;
     }
 
     .back-to-order {
-        padding: 5px 10px;
-        border-radius: 8px;
-        background: #3b8dff;
-        color: #fff;
-        text-decoration: none;
-        margin-left: 20px;
+        margin-left: 0;
+        margin-top: 10px;
     }
+}
 
 
 </style>

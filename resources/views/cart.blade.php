@@ -117,6 +117,101 @@
         color: whitesmoke;
         font-size: 18px;
     }
+
+/* Tablet & Mobile */
+@media (max-width: 468px) {
+    .cart-container {
+        flex-direction: column;
+        max-width: 900px;
+        margin: auto;
+        border-radius: 15px;
+        padding: clamp(20px, 5vw, 30px);
+    }
+
+    .cart-table {
+        width: 100%;
+        border-collapse: collapse;
+        display: block;
+        
+    }
+
+    .cart-table thead {
+        display: none; /* hide original headers on mobile */
+    }
+
+    .cart-table tr {
+        display: block;
+        margin-bottom: 20px;
+        border: 1px solid #e2dddd;
+        border-radius: 10px;
+        padding: 15px;
+        background: #fff;
+    }
+
+    .cart-table td {
+        display: flex;
+        align-items: center;
+        padding: 6px 10px;
+        border-bottom: 1px solid #eee;
+        position: relative;
+        min-height: 40px;
+    }
+
+    /* Labels */
+    .cart-table td::before {
+        content: attr(data-label);
+        font-weight: bold;
+        width: 120px;
+        flex-shrink: 0;
+    }
+
+    /* Image styling */
+    .cart-table td img {
+        max-width: 60px;
+        height: auto;
+        margin-left: 10px;
+        border-radius: 6px;
+    }
+
+    .quantity-control, .remove-btn {
+        margin-left: 10px;
+    }
+
+    .cart-summary {
+        width: 100%;
+        margin-top: 20px;
+    }
+}
+
+
+@media (max-width: 480px) {
+    .cart-table td::before {
+        width: 100px;
+        font-size: 14px;
+    }
+
+    .cart-table img {
+        max-width: 50px;
+    }
+}
+@media (max-width: 1024px) {
+    .cart-container {
+        flex-direction: column;
+        padding: 10px;
+    }
+
+    .cart-table {
+        width: 100%;
+        border-collapse: collapse;
+        table-layout: auto;
+        display: table; /* keep table layout */
+        overflow-x: auto;
+        flex-direction: column;
+        
+    }
+
+    
+}
 </style>
 @section('content')
 <div class="container" style="padding: 66px 60px;">
@@ -135,40 +230,38 @@
                 </tr>
             </thead>
             <tbody>
-                @forelse($cartItems as $item)
-                <tr>
-                    <td>
-                        @if($item->product->product_image)
-                        <img src="{{ asset('uploads/products/' . $item->product->product_image) }}" alt="{{ $item->product->product_name }}">
-                        @else
-                        <img src="{{ asset('images/default.jpg') }}" alt="{{ $item->product->product_name }}">
-                        @endif
-                    </td>
-                    <td><strong>{{$item->product->product_name}}</strong></td>
-                    <td>{{formatRupees($item->price)}}</td>
-                    <td>
-                        <!-- <div class="quantity-control">
-                            <button type="button" class="decrease-btn">-</button>
-                            <input type="text" class="quantity-input" value="{{ $item->quantity }}" readonly>
-                            <button type="button" class="increase-btn">+</button>
-                        </div> -->
-                        {{$item->quantity}}
-                    </td>
-                    <td>{{ formatRupees($item->total_price) }}</td>
-                    <td>
-                        <button type="button" class="remove-btn" data-id="{{ $item->id }}">
-                            <i class="fa fa-trash" style="color: red;"></i>
-                        </button>
-                    </td>
-                </tr>
+    @forelse($cartItems as $item)
+    <tr>
+        <td data-label="IMAGE">
+            @if($item->product->product_image)
+            <img src="{{ asset('uploads/products/' . $item->product->product_image) }}" alt="{{ $item->product->product_name }}">
+            @else
+            <img src="{{ asset('images/default.jpg') }}" alt="{{ $item->product->product_name }}">
+            @endif
+        </td>
 
-                @empty
-                <tr>
-                    <td colspan="6">No items in the cart</td>
-                </tr>
-                @endforelse
+        <td data-label="PRODUCT NAME"><strong>{{ $item->product->product_name }}</strong></td>
 
-            </tbody>
+        <td data-label="PRICE">{{ formatRupees($item->price) }}</td>
+
+        <td data-label="QUANTITY">{{ $item->quantity }}</td>
+
+        <td data-label="TOTAL">{{ formatRupees($item->total_price) }}</td>
+
+        <td data-label="REMOVE">
+            <button type="button" class="remove-btn" data-id="{{ $item->id }}">
+                <i class="fa fa-trash" style="color: red;"></i>
+            </button>
+        </td>
+    </tr>
+
+    @empty
+    <tr>
+        <td colspan="6">No items in the cart</td>
+    </tr>
+    @endforelse
+</tbody>
+
         </table>
 
         <div class="cart-summary">

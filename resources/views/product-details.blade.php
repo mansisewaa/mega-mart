@@ -87,6 +87,7 @@
         color: #4a69bd;
         margin-top: 1rem;
         color: #3C66CF;
+        text-align:left;
     }
 
     .product-description p {
