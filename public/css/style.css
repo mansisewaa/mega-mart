@@ -887,8 +887,8 @@ b,strong {
 
 /* Product Section */
 .product-card {
-    border-radius: 20px;
-    padding: clamp(15px, 2vw, 20px);
+    border-radius: 15px;
+    padding: clamp(10px, 1.5vw, 15px);
     box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.05);
     display: flex;
     flex-direction: row;
@@ -917,22 +917,25 @@ b,strong {
     align-items: center;
     width: 100%;
     flex-wrap: wrap; 
+    flex-direction: row;
     gap: 1rem; /* spacing between text and image */
 }
 
 /* Updated card-text for perfect iPad and small screen responsiveness */
 .card-text {
-    flex: 1 1 45%; 
+    flex: 1 1 50%; 
     min-width: 200px; /* prevents collapsing on smaller screens */
     text-align: left; 
+    order: 1; /* left side */
 }
 
 .card-image {
-    flex: 1 1 45%; 
+    flex: 1 1 50%; 
     display: flex;
     justify-content: flex-end;
     align-items: center;
     min-width: 200px;
+    order: 2; /* right side */
 }
 
 .discount-text {
@@ -961,7 +964,7 @@ b,strong {
 
 .product-img {
     width: 100%; /* scales with container */
-    max-width: 225px; /* prevents growing too large on desktop */
+    max-width: 150px; /* prevents growing too large on desktop */
     height: auto; /* keeps aspect ratio */
     opacity: 1;
     top: auto; 
@@ -1016,7 +1019,32 @@ b,strong {
         grid-template-columns: repeat(2, 1fr); /* 2 items per row */
         gap: 15px;       
     }   
-}
+
+    .product-card {
+        flex-direction: row; /* keep text and image side by side */
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: nowrap; /* prevent stacking */
+        padding: 10px;
+            
+        min-height: 20px !important;    /* set smaller height */
+        gap: 10px;           /* reduce spacing between elements */
+        
+    }
+
+     .product-image {
+        max-width: 100px;  /* adjust image size */
+        height: auto;
+        order: 1;          /* image comes first */
+    }
+
+    .product-card .card-text, .product-card .product-details {
+        flex: 1;           /* text takes remaining space */
+        order: 2;          /* text comes after image */
+    }
+    }
+
+
 
 
 /* Category Section  */
@@ -1149,7 +1177,12 @@ b,strong {
     color: #0A0A0A;
     margin: 0;
 }
-
+@media (max-width: 768px) {
+    .shop-category h2 {
+        font-size: 24px !important;   /* smaller font size */
+        line-height: 32px !important; /* adjust line height */
+    }
+}
 
 /* Latest Product */
 .custom-latest-products {
@@ -1375,6 +1408,66 @@ b,strong {
     transform: translateY(-4px);
     /* box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.08); */
 }
+/* MOBILE VIEW SAFE FIX */
+/* MOBILE VIEW - Latest Products */
+@media (max-width: 768px) {
+
+    /* Reduce section heading size */
+    .custom-section-title {
+        font-size: 24px !important;
+        line-height: 32px !important;
+    }
+
+    /* Product grid: 2 products per row */
+    .customer-product-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 15px; /* smaller spacing for mobile */
+    }
+
+    /* Reduce product image size only */
+    .custom-product-img {
+        height: 100px;       /* smaller image */
+        width: auto;         /* maintain aspect ratio */
+        object-fit: contain;
+        margin: 8px auto;    /* center image in card */
+    }
+
+    /* Reduce text sizes inside product card for mobile */
+    .custom-product-name {
+        font-size: 14px;
+        line-height: 18px;
+    }
+
+    .custom-product-category {
+        font-size: 12px !important;
+    }
+
+    .custom-product-price {
+        font-size: 14px;
+    }
+     .custom-product-price {
+        display: flex;
+        flex-direction: column; /* stack vertically */
+        gap: 4px;               /* small space between prices */
+        align-items: flex-start; /* left-align prices */
+    }
+
+    /* Optional: slightly smaller font sizes for mobile */
+    .custom-new-price {
+        font-size: 14px; /* blue price */
+        color: rgba(31, 95, 255, 1); /* keep blue */
+        font-weight: 700;
+    }
+
+    .custom-old-price {
+        font-size: 12px; /* gray price below */
+        color: rgba(120, 128, 148, 1); /* keep gray */
+        text-decoration: line-through;
+        font-weight: 600;
+    }
+}
+
+
 
 
 /* VHPL Section */
@@ -1491,8 +1584,8 @@ b,strong {
     }
 
     .vhpl-features {
-        grid-template-columns: 1fr; /* stack vertically on mobile */
-        gap: 1rem;
+        grid-template-columns: repeat(2, 1fr);  /* stack vertically on mobile */
+        gap: 1rem 1.5rem; 
     }
 
     .vhpl-image {
@@ -1501,6 +1594,7 @@ b,strong {
 
     .vhpl-text h2 {
         font-size: clamp(20px, 5vw, 28px);
+
     }
 
     .vhpl-subtitle {
@@ -1689,6 +1783,26 @@ b,strong {
         grid-column: span 2;
         /* take full width at this size */
     }
+    .ward-furniture-title {
+        font-size: 20px;  /* smaller heading */
+        text-align: left; /* align left */
+    }
+     .ward-furniture-view-all {
+        font-size: 12px;
+        padding: 6px 14px;
+    }
+    /* Reduce card height to make cards compact */
+    .ward-furniture-card {
+        height: 220px; /* reduced from 300px */
+        padding: 10px;
+    }
+      /* Reduce card image size */
+    .ward-furniture-card img,
+    .ward-furniture-img {
+        max-height: 100px; /* smaller image */
+        margin-bottom: 6px;
+    }
+    
 }
 
 
