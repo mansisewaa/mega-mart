@@ -168,7 +168,12 @@ Route::prefix('customer')->name('customer.')->group(function () {
 
     Route::get('register', [CustomerAuthController::class, 'showRegisterForm'])->name('register');
     Route::post('register', [CustomerAuthController::class, 'register']);
+    
+    // OTP Verification (after registration)
+    Route::get('otp-verify', [CustomerAuthController::class, 'showOtpForm'])->name('otp.verify');
+    Route::post('otp-verify', [CustomerAuthController::class, 'verifyOtp'])->name('otp.verify.submit');
 
+    
     // Protected routes
     // Route::middleware('auth:customer')->group(function () {
     Route::get('dashboard', [CustomerController::class, 'dashboard'])->name('dashboard');

@@ -7,35 +7,32 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use App\Models\EmailOtp;
+use App\Mail\SendOtpMail;
+use Illuminate\Support\Facades\Mail;
+use Carbon\Carbon;
 
 class CustomerAuthController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    // Show login page
     public function showLoginForm()
     {
         return view('customer.auth.login');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+    // Show registration page
     public function showRegisterForm()
     {
         return view('customer.auth.register');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+    // Registration
     public function register(Request $request)
     {
-
         $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name'  => 'required|string|max:255',
-            'email'      => 'required|string|email|max:255|unique:users',
+            'email'      => 'required|string|email|max:255|unique:customers,email',
             'password'   => 'required|string|min:8|confirmed',
         ]);
 
@@ -43,62 +40,118 @@ class CustomerAuthController extends Controller
             $name = trim($request->first_name . ' ' . $request->last_name);
 
             $customer = Customer::create([
-                'name'     => $name,
-                'phone_no'  => $request->contact,
-                'email'    => $request->email,
-                'address'  => $request->address,
-                'city'     => $request->city,
-                'state'    => $request->state,
-                'pin_code' => $request->pin_code,
-                'password' => Hash::make($request->password),
+                'name'       => $name,
+                'phone_no'   => $request->contact,
+                'email'      => $request->email,
+                'address'    => $request->address,
+                'city'       => $request->city,
+                'state'      => $request->state,
+                'pin_code'   => $request->pin_code,
+                'password'   => Hash::make($request->password),
+                'is_verified'=> false,
             ]);
 
-            Auth::guard('customer')->login($customer);
+            // Generate OTP
+            $otp = rand(100000, 999999);
 
-            return redirect()->route('customer.wishlist')->with('success', 'Registration successful!');
+            EmailOtp::updateOrCreate(
+                ['email' => $customer->email],
+                ['otp' => $otp, 'expires_at' => Carbon::now()->addMinutes(5)]
+            );
+
+            Mail::to($customer->email)->send(new SendOtpMail($otp));
+
+            return redirect()->route('customer.otp.verify', ['email' => $customer->email])
+                             ->with('success', 'Registration successful! Please check your email for OTP.');
+
         } catch (\Throwable $th) {
-            //throw $th;
-            // dd($th->getMessage());
             return redirect()->back()->with('error', $th->getMessage());
         }
     }
 
-    /**
-     * Display the specified resource.
-     */
+    // Login (email + password → send OTP)
     public function login(Request $request)
     {
-        $credentials = $request->validate([
+        $request->validate([
             'email'    => 'required|email',
             'password' => 'required',
         ]);
 
-        try {
-            if (Auth::guard('customer')->attempt($credentials)) {
-                $request->session()->regenerate();
+        $customer = Customer::where('email', $request->email)->first();
 
-                return redirect()->intended(route('products'))
-                    ->with('success', 'Welcome back, ' . Auth::guard('customer')->user()->name . '!');
-            }
+        if (!$customer || !Hash::check($request->password, $customer->password)) {
             return back()->withErrors([
-                'email' => 'The provided credentials do not match our records.',
+                'email' => 'Invalid email or password.',
             ])->onlyInput('email');
-        } catch (\Throwable $th) {
-            Log::error($th->getMessage());
-            return redirect()->back()->with('error', $th->getMessage());
         }
+
+        // Generate OTP
+        $otp = rand(100000, 999999);
+
+        EmailOtp::updateOrCreate(
+            ['email' => $customer->email],
+            ['otp' => $otp, 'expires_at' => Carbon::now()->addMinutes(5)]
+        );
+
+        Mail::to($customer->email)->send(new SendOtpMail($otp));
+
+        // Redirect to OTP page for login
+        return redirect()->route('customer.otp.verify', ['email' => $customer->email])
+                         ->with('success', 'OTP sent! Please check your email to complete login.');
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
+    // Show OTP verification page (registration or login)
+    public function showOtpForm(Request $request)
+    {
+        $email = $request->query('email');
+        return view('customer.auth.otp_verify', compact('email'));
+    }
+
+    // Verify OTP (for registration or login)
+    public function verifyOtp(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'otp'   => 'required|digits:6',
+        ]);
+
+        $otpRecord = EmailOtp::where('email', $request->email)->first();
+
+        if (!$otpRecord) {
+            return redirect()->back()->with('error', 'OTP not found. Please try again.');
+        }
+
+        if (Carbon::now()->greaterThan($otpRecord->expires_at)) {
+            return redirect()->back()->with('error', 'OTP expired. Please try again.');
+        }
+
+        if ($otpRecord->otp != $request->otp) {
+            return redirect()->back()->with('error', 'Invalid OTP. Please try again.');
+        }
+
+        $customer = Customer::where('email', $request->email)->first();
+        if ($customer) {
+            $customer->is_verified = true;
+            $customer->save();
+
+            // ✅ Automatically log the customer in
+            Auth::guard('customer')->login($customer);
+        }
+
+        // Delete OTP
+        $otpRecord->delete();
+
+        // Redirect to wishlist
+        return redirect()->route('customer.wishlist')->with('success', 'Logged in successfully!');
+    }
+
+    // Logout
     public function logout(Request $request)
     {
         Auth::guard('customer')->logout();
-
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('customer.login')->with('success', 'You have been logged out successfully.');
+        return redirect()->route('customer.login')->with('success', 'Logged out successfully.');
     }
 }
